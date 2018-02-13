@@ -45,3 +45,15 @@ function loop(time) { // eslint-disable-line no-unused-vars
   renderer.render( scene, camera );
   
 }
+
+
+document.addEventListener('keydown', e => {
+  // console.log(e.key, e.keyCode, e);
+  
+  if (e.key == 'f') { // f .. fullscreen
+    if (!document.webkitFullscreenElement) {
+      document.querySelector('body').webkitRequestFullscreen();
+    } else { document.webkitExitFullscreen(); }
+  }
+  
+});
