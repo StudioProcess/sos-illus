@@ -1,4 +1,4 @@
-const crisper_dotFS = `
+const crispr_dotFS = `
 precision mediump float;
 
 void main()

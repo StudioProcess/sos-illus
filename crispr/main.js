@@ -1,10 +1,12 @@
 const W = 1280;
 const H = 720;
 
-let renderer, scene, camera, heighmapRunner;
+let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
 
 const clock = new THREE.Clock();
+
+const numSteps = 20;
 
 const uniforms = {
   time: {type: "f", value: 0.0},
@@ -13,7 +15,9 @@ const uniforms = {
   point1: {type: "3fv", value: [2.0, 3.0, 1.0]},
   point2: {type: "3fv", value: [1.0, 6.0, 3.0]},
 
-  offsetDistance: {type: "f", value: 3.0},
+  offsetDistance: {type: "f", value: 5.0},
+
+  windings: {type: "f", value: 3.0},
 };
 
 main();
@@ -43,13 +47,13 @@ function setup() {
   controls = new THREE.OrbitControls( camera, renderer.domElement );
   camera.position.z = 20;
 
-  const geometry = getInstancedDotGeometry(20, 0.2, 10);
+  const geometry = getInstancedDotGeometry(20, 0.2, numSteps);
 
   const centerDots = new THREE.Mesh(
     geometry,
     new THREE.RawShaderMaterial({
-      vertexShader: crisper_dotVS,
-      fragmentShader: crisper_dotFS,
+      vertexShader: crispr_dotVS,
+      fragmentShader: crispr_dotFS,
       uniforms,
       // wireframe: true
     })
@@ -60,8 +64,8 @@ function setup() {
   const offsetDots = new THREE.Mesh(
     geometry,
     new THREE.RawShaderMaterial({
-      vertexShader: crisper_dotVS,
-      fragmentShader: crisper_dotFS,
+      vertexShader: crispr_dotVS,
+      fragmentShader: crispr_dotFS,
       uniforms,
       defines: {
         OFFSET_DOT: true
@@ -72,10 +76,21 @@ function setup() {
   offsetDots.frustumCulled = false;
   scene.add(offsetDots);
 
+  const lines = new THREE.Mesh(
+    getInstancedLineGeometry(1.0, numSteps),
+    new THREE.RawShaderMaterial({
+      vertexShader: crispr_lineVS,
+      fragmentShader: crispr_dotFS,
+      uniforms,
+      side: THREE.DoubleSide,
+      // wireframe: true
+    })
+  );
+  lines.frustumCulled = false;
+  scene.add(lines);
+
   onResize();
   window.addEventListener("resize", onResize);
-
-  heighmapRunner = new DynamicRenderTextureRunner();
 
   clock.start();
 }

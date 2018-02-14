@@ -1,4 +1,4 @@
-const crisper_dotVS = `
+const crispr_lineVS = `
 precision mediump float;
 
 uniform mat4 modelViewMatrix;
@@ -12,7 +12,9 @@ uniform vec3 point2;
 
 uniform float offsetDistance;
 
-attribute vec2 position;
+uniform float windings;
+
+attribute vec3 position;
 attribute float normId;
 
 const float PI = 3.14159265359; 
@@ -63,15 +65,15 @@ vec3 rotate_vertex_position(vec3 position, vec3 axis, float angle)
 }
 
 void main()	{
-  vec4 transformed = vec4(1.0);
-  transformed.xyz = Spline(
+  
+  vec3 startPos = Spline(
     point0,
     point1,
     point2,
     normId
   );
+  vec3 endPos = startPos;
 
-  #if defined( OFFSET_DOT )
   vec3 forwardV = Spline(
     point0,
     point1,
@@ -79,18 +81,38 @@ void main()	{
     normId + 0.05
   );
 
-  forwardV = normalize(transformed.xyz - forwardV);
+  forwardV = normalize(startPos - forwardV);
   vec3 offsetU = cross(forwardV, vec3(0.0, 1.0, 0.0));
   vec3 offsetV = cross(forwardV, offsetU);
 
-  float angle = time + normId * 3.0;
+  float angle = time + normId * windings;
 
-  transformed.xyz += (sin(angle) * offsetDistance) * offsetV;
-  transformed.xyz += (cos(angle) * offsetDistance) * offsetU;
-  #endif
+  endPos += (sin(angle) * offsetDistance) * offsetV;
+  endPos += (cos(angle) * offsetDistance) * offsetU;
 
-  transformed = modelViewMatrix * transformed;
-  transformed.xy += position.xy * transformed.w;
+
+  vec4 transformedStart = modelViewMatrix * vec4(startPos, 1.0);
+  vec4 transformedEnd = modelViewMatrix * vec4(endPos, 1.0);
+
+  vec4 transformed = vec4(1.0);
+  transformed.xyz = mix(
+    transformedStart.xyz,
+    transformedEnd.xyz,
+    position.z
+  );
+  vec2 lineV = normalize(transformedStart.xy - transformedEnd.xy);
+  vec2 extrudeV;
+  extrudeV.x = lineV.y;
+  extrudeV.y = -lineV.x;
+
+  extrudeV *= mix(
+    transformedStart.w,
+    transformedEnd.w,
+    position.z
+  );
+
+  transformed.xy += (position.x * 0.02) * extrudeV;
+  // transformed.xy += position.xy * transformed.w;
 
 	gl_Position = projectionMatrix * transformed;
 	// gl_Position = vec4(position, 0.0, 1.0);
