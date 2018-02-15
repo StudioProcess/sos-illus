@@ -1,5 +1,10 @@
+import * as tilesaver from '../app/tilesaver.js';
+
 const W = 1280;
 const H = 720;
+
+let RENDERING = false;
+let TILES = 2;
 
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
@@ -39,7 +44,6 @@ function main() {
   setup(); // set up scene
   
   loop(); // start game loop
-  
 }
 
 
@@ -88,6 +92,8 @@ function setup() {
   window.addEventListener("resize", onResize);
 
   clock.start();
+
+  tilesaver.init(renderer, scene, camera, TILES);
 }
 
 function onResize() {
@@ -103,16 +109,33 @@ function loop(time) { // eslint-disable-line no-unused-vars
 
   const delta = Math.min(1.0 / 20.0, clock.getDelta());
 
-  uniforms.time.value += delta;
+  if (!RENDERING) {
+    uniforms.time.value += delta;
 
-  for (let i = 0, l = uniforms.pointPositions.value.length; i < l; i++) {
-    uniforms.pointPositions.value[i].x = uniforms.time.value % 0.3 < 0.05 ? 0.5 : -2.0;
+    for (let i = 0, l = uniforms.pointPositions.value.length; i < l; i++) {
+      uniforms.pointPositions.value[i].x = uniforms.time.value % 0.3 < 0.05 ? 0.5 : -2.0;
+    }
   }
   
-  requestAnimationFrame( loop );
+  if (!RENDERING) {
+    requestAnimationFrame( loop );
+  }
 
   heightPingPong.render();
-
   renderer.render( scene, camera );
   
 }
+
+document.addEventListener('keydown', e => {
+  if (e.key == ' ') {
+    console.log('space');
+    RENDERING = !RENDERING;
+  } else if (e.key == 'e') {
+    tilesaver.save().then(
+      (f) => {
+        console.log(`Saved to: ${f}`);
+        // loop();
+      }
+    );
+  }
+});
