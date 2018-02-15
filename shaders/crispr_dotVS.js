@@ -11,11 +11,14 @@ uniform vec3 point1;
 uniform vec3 point2;
 
 uniform float offsetDistance;
-
 uniform float windings;
+
+uniform float dotSize;
 
 attribute vec2 position;
 attribute float normId;
+
+uniform float rotationSpeed;
 
 const float PI = 3.14159265359; 
 
@@ -85,14 +88,14 @@ void main()	{
   vec3 offsetU = cross(forwardV, vec3(0.0, 1.0, 0.0));
   vec3 offsetV = cross(forwardV, offsetU);
 
-  float angle = time + normId * windings;
+  float angle = rotationSpeed * time + normId * windings;
 
   transformed.xyz += (sin(angle) * offsetDistance) * offsetV;
   transformed.xyz += (cos(angle) * offsetDistance) * offsetU;
   #endif
 
   transformed = modelViewMatrix * transformed;
-  transformed.xy += position.xy * transformed.w;
+  transformed.xy += position.xy * (transformed.w * dotSize);
 
 	gl_Position = projectionMatrix * transformed;
 	// gl_Position = vec4(position, 0.0, 1.0);

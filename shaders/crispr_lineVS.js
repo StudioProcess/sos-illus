@@ -12,10 +12,14 @@ uniform vec3 point2;
 
 uniform float offsetDistance;
 
+uniform float lineWeight;
+
 uniform float windings;
 
 attribute vec3 position;
 attribute float normId;
+
+uniform float rotationSpeed;
 
 const float PI = 3.14159265359; 
 
@@ -85,7 +89,7 @@ void main()	{
   vec3 offsetU = cross(forwardV, vec3(0.0, 1.0, 0.0));
   vec3 offsetV = cross(forwardV, offsetU);
 
-  float angle = time + normId * windings;
+  float angle = rotationSpeed * time + normId * windings;
 
   endPos += (sin(angle) * offsetDistance) * offsetV;
   endPos += (cos(angle) * offsetDistance) * offsetU;
@@ -111,7 +115,7 @@ void main()	{
     position.z
   );
 
-  transformed.xy += (position.x * 0.02) * extrudeV;
+  transformed.xy += (position.x * lineWeight) * extrudeV;
   // transformed.xy += position.xy * transformed.w;
 
 	gl_Position = projectionMatrix * transformed;

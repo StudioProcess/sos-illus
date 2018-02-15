@@ -1,34 +1,45 @@
+import * as tilesaver from '../app/tilesaver.js';
+import generateGui from "../shared/generateGui.js";
+
 const W = 1280;
 const H = 720;
+
+let RENDERING = false;
+let TILES = 2;
 
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
 
 const clock = new THREE.Clock();
 
-const numSteps = 20;
+const numSteps = 40;
 
 const uniforms = {
-  time: {type: "f", value: 0.0},
+  time: {type: "f", value: 0.0, hideinGui: true},
 
-  point0: {type: "3fv", value: [-3.0, -2.0, 0.0]},
+  point0: {type: "3fv", value: [-3.0, -8.0, 0.0]},
   point1: {type: "3fv", value: [2.0, 3.0, 1.0]},
-  point2: {type: "3fv", value: [1.0, 6.0, 3.0]},
+  point2: {type: "3fv", value: [1.0, 10.0, 3.0]},
 
-  offsetDistance: {type: "f", value: 5.0},
+  offsetDistance: {type: "f", value: 8.0},
+
+  dotSize: {type: "f", value: 1.0},
+  lineWeight: {type: "f", value: 0.02},
 
   windings: {type: "f", value: 3.0},
+  rotationSpeed: {type: "f", value: 1.0},
 };
 
 main();
 
 
 function main() {
-  
   setup(); // set up scene
   
   loop(); // start game loop
   
+  tilesaver.init(renderer, scene, camera, TILES);
+  generateGui(uniforms);
 }
 
 
@@ -107,9 +118,24 @@ function loop(time) { // eslint-disable-line no-unused-vars
 
   const delta = Math.min(1.0 / 20.0, clock.getDelta());
 
-  uniforms.time.value += delta;
-  
-  requestAnimationFrame( loop );
+  if (!RENDERING) {
+    uniforms.time.value += delta;
+    requestAnimationFrame(loop);
+  }
+
   renderer.render( scene, camera );
-  
 }
+
+document.addEventListener('keydown', e => {
+  if (e.key == ' ') {
+    console.log('space');
+    RENDERING = !RENDERING;
+  } else if (e.key == 'e') {
+    tilesaver.save().then(
+      (f) => {
+        console.log(`Saved to: ${f}`);
+        loop();
+      }
+    );
+  }
+});

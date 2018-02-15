@@ -9,8 +9,14 @@ uniform vec2 computeResolution;
 
 uniform float attack;
 uniform float decay;
+uniform float engeryReduce;
+
+uniform float dotEffect;
 
 uniform float pointSize;
+
+uniform float cornerEffect;
+uniform float averageDivider;
 
 varying vec2 vUV;
 
@@ -33,15 +39,15 @@ void main()
 
   float outerAverage = l + r + t + b;
 
-  outerAverage += texture2D(pingPongInMap, vUV + uvYOffset - uvXOffset).r * 0.75; // TL
-  outerAverage += texture2D(pingPongInMap, vUV + uvYOffset + uvXOffset).r * 0.75; // TR
-  outerAverage += texture2D(pingPongInMap, vUV - uvYOffset - uvXOffset).r * 0.75; // BL
-  outerAverage += texture2D(pingPongInMap, vUV - uvYOffset + uvXOffset).r * 0.75; // BR
+  outerAverage += texture2D(pingPongInMap, vUV + uvYOffset - uvXOffset).r * cornerEffect; // TL
+  outerAverage += texture2D(pingPongInMap, vUV + uvYOffset + uvXOffset).r * cornerEffect; // TR
+  outerAverage += texture2D(pingPongInMap, vUV - uvYOffset - uvXOffset).r * cornerEffect; // BL
+  outerAverage += texture2D(pingPongInMap, vUV - uvYOffset + uvXOffset).r * cornerEffect; // BR
 
-  outerAverage /= 7.0;
+  outerAverage /= averageDivider;
 
-  prevData.r += (prevVel + (2.0 * (outerAverage - prevData.r))) * 0.99;
-  prevData.r *= 0.9999;
+  prevData.r += (prevVel + (attack * (outerAverage - prevData.r))) * decay;
+  prevData.r *= engeryReduce;
 
   vec2 dist;
   for (int i = 0; i < NUM_POINTS; i++) {
@@ -55,8 +61,8 @@ void main()
     dist.x *= dist.x;
     dist.y *= dist.y;
 
-    prevData.r += mix(
-      3.0,
+    prevData.r += pointPositions[i].z * mix(
+      dotEffect,
       0.0,
       clamp(dist.x + dist.y, 0.0, 1.0)
     );

@@ -1,4 +1,5 @@
 import * as tilesaver from '../app/tilesaver.js';
+import generateGui from "../shared/generateGui.js";
 
 const W = 1280;
 const H = 720;
@@ -17,21 +18,29 @@ const renderResolutionX = 512;
 const renderResolutionY = 512;
 
 const uniforms = {
-  time: {type: "f", value: 0.0},
-  aspectRatio: {type: "f", value: W / H},
-  computeResolution: {type: "2fv", value: [1.0 / renderResolutionX, 1.0 / renderResolutionY]},
+  time: {type: "f", value: 0.0, hideinGui: true},
+  aspectRatio: {type: "f", value: W / H, hideinGui: true},
+  computeResolution: {type: "2fv", value: [1.0 / renderResolutionX, 1.0 / renderResolutionY], hideinGui: true},
 
+  dotEffect: {type: "f", value: 3.0},
 
-  attack: {type: "f", value: 0.1},
-  decay: {type: "f", value: 0.9},
+  attack: {type: "f", value: 2.0},
+  decay: {type: "f", value: 0.99},
+  engeryReduce: {type: "f", value: 0.9999, min: 0.1, max: 2.0, step: 0.0001},
 
-  pointSize: {type: "f", value: 0.005},
+  pointSize: {type: "f", value: 0.01},
+
+  cornerEffect: {type: "f", value: 0.75},
+  averageDivider: {type: "f", value: 7.00001},
+
+  frequency: {type: "f", value: 0.3},
+  onDuration: {type: "f", value: 0.05},
 
   pointPositions: {
     type: "v3v",
     value: [
-      new THREE.Vector3( 0.5, 0.5, 0.3 ), 
-      new THREE.Vector3( 0.0, 0.8, 0.6 )
+      new THREE.Vector3( 0.5, 0.8, 0.0 ), 
+      new THREE.Vector3( 0.5, 0.5, 0.0 )
     ]
   }
 };
@@ -44,6 +53,9 @@ function main() {
   setup(); // set up scene
   
   loop(); // start game loop
+
+  tilesaver.init(renderer, scene, camera, TILES);
+  generateGui(uniforms);
 }
 
 
@@ -92,8 +104,6 @@ function setup() {
   window.addEventListener("resize", onResize);
 
   clock.start();
-
-  tilesaver.init(renderer, scene, camera, TILES);
 }
 
 function onResize() {
@@ -113,7 +123,8 @@ function loop(time) { // eslint-disable-line no-unused-vars
     uniforms.time.value += delta;
 
     for (let i = 0, l = uniforms.pointPositions.value.length; i < l; i++) {
-      uniforms.pointPositions.value[i].x = uniforms.time.value % 0.3 < 0.05 ? 0.5 : -2.0;
+      uniforms.pointPositions.value[i].z = 
+        uniforms.time.value % uniforms.frequency.value < uniforms.onDuration.value ? 1.0 : 0.0;
     }
   }
   

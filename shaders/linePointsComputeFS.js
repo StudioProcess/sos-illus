@@ -11,6 +11,10 @@ uniform float planetWidth;
 
 uniform float planetBaseOffset;
 
+uniform vec2 lineSizes;
+
+uniform vec2 noiseAmount;
+
 varying vec2 vUV;
 
 // #region noise
@@ -136,14 +140,14 @@ void main()
   noisePosition.y = vUV.y * noiseScale.y;
   noisePosition.z = time * noiseSpeed;
 
-  color.x = (vUV.x - 0.5) * 20.0;
+  color.x = (vUV.x - 0.5) * lineSizes.x;
 
   float isPlanet = cubicPulse(planetPos, planetWidth, vUV.x);
 
-  color.y = (vUV.y - 0.5) * 20.0;
+  color.y = (vUV.y - 0.5) * lineSizes.y;
   color.y += snoise(noisePosition) * mix(
-    0.2,
-    1.4,
+    noiseAmount.x,
+    noiseAmount.y,
     isPlanet
   );
 

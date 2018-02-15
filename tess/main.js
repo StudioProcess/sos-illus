@@ -1,4 +1,5 @@
 import * as tilesaver from '../app/tilesaver.js';
+import generateGui from "../shared/generateGui.js";
 
 const W = 1280;
 const H = 720;
@@ -17,16 +18,41 @@ const lineSubdivisions = 1024; // power of two please
 const numLines = 8; // power of two please
 
 const uniforms = {
-  time: {type: "f", value: 0.0},
-  aspectRatio: {type: "f", value: W / H},
-  uvSteps: {type: "2fv", value: [1.0 / lineSubdivisions, 1.0 / numLines]},
+  time: {type: "f", value: 0.0, hideinGui: true},
+  aspectRatio: {type: "f", value: W / H, hideinGui: true},
+  uvSteps: {type: "2fv", value: [1.0 / lineSubdivisions, 1.0 / numLines], hideinGui: true},
 
-  noiseSpeed: {type: "f", value: 0.1},
-  noiseScale: {type: "2fv", value: [30.0, 100.0]},
+  noiseSpeed: {type: "f", value: 0.1, min: 0.0, max: 2.0, step: 0.001},
+  noiseScale: {
+    type: "2fv",
+    value: [30.0, 100.0],
+    gui: [
+      {name: "x", min: 0.0, max: 200.0, step: 0.001},
+      {name: "y", min: 0.0, max: 200.0, step: 0.001},
+    ]
+  },
 
-  planetPos: {type: "f", value: 0.5},
-  planetWidth: {type: "f", value: 0.05},
-  planetBaseOffset: {type: "f", value: 4.0},
+  lineSizes: {
+    type: "2fv",
+    value: [20.0, 20.0],
+    gui: [
+      {name: "x", min: 0.0, max: 20.0, step: 0.001},
+      {name: "y", min: 0.0, max: 20.0, step: 0.001},
+    ]
+  },
+
+  noiseAmount: {
+    type: "2fv",
+    value: [0.2, 1.4],
+    gui: [
+      {name: "base", min: 0.0, max: 4.0, step: 0.001},
+      {name: "yplanet", min: 0.0, max: 4.0, step: 0.001},
+    ]
+  },
+
+  planetPos: {type: "f", value: 0.5, min: 0.0, max: 1.0, step: 0.001},
+  planetWidth: {type: "f", value: 0.05, min: 0.0, max: 0.2, step: 0.001},
+  planetBaseOffset: {type: "f", value: 4.0, min: 0.0, max: 10.0, step: 0.001},
 
   positionsMap: {type: "t", value: null}
 };
@@ -35,13 +61,12 @@ main();
 
 
 function main() {
-  
   setup(); // set up scene
-  
+
   loop(); // start game loop
 
   tilesaver.init(renderer, scene, camera, TILES);
-  
+  generateGui(uniforms);
 }
 
 
@@ -90,8 +115,6 @@ function setup() {
   window.addEventListener("resize", onResize);
 
   clock.start();
-
-  tilesaver.init(renderer, scene, camera, TILES);
 }
 
 function onResize() {
@@ -112,8 +135,7 @@ function loop(time) { // eslint-disable-line no-unused-vars
   }
   
   if (!RENDERING) {
-    requestAnimationFrame( loop );
-
+    requestAnimationFrame(loop);
   }
 
   positionsTextureRunner.render();
