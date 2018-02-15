@@ -4,7 +4,6 @@ const DynamicRenderTextureRunner = (function() {
   }
 
   DynamicRenderTextureRunner.prototype.setup = function(
-    scene,
     camera,
     renderer,
     vertexShader,
@@ -12,35 +11,37 @@ const DynamicRenderTextureRunner = (function() {
     uniforms,
     resolutionX,
     resolutionY,
-    geometry = new THREE.PlaneBufferGeometry(2.0, 2.0, 1, 1), skipPostProcessing = false) {
-    this.scene = scene;
+  ) {
     this.camera = camera;
     this.renderer = renderer;
     
-    this.renderTarget = new THREE.WebGLRenderTarget(resolutionX, resolutionY);
-    Object.assign(uniforms, {
-      sceneMap: {
-        type: "t",
-        value: this.renderTarget.texture
+    this.renderTarget = new THREE.WebGLRenderTarget(
+      resolutionX,
+      resolutionY,
+      {
+        minFilter: THREE.NearestFilter,
+        magFilter: THREE.NearestFilter,
+        type: THREE.HalfFloatType,
       }
-    });
-    this.outputMaterial = new THREE.ShaderMaterial({
+    );
+
+    this.outputMaterial = new THREE.RawShaderMaterial({
       vertexShader: vertexShader,
       fragmentShader: fragmentShader,
       uniforms,
     });
+
     this.outputScene = new THREE.Scene();
-    this.outputScene.add(new THREE.Mesh(geometry, this.outputMaterial));
+    this.outputScene.add(new THREE.Mesh(
+      new THREE.PlaneBufferGeometry(2.0, 2.0, 1, 1),
+      this.outputMaterial)
+    );
+
+    return this.renderTarget.texture;
   };
 
   DynamicRenderTextureRunner.prototype.render = function() {
-    if (this.skipPostProcessing) {
-      this.renderer.render(this.scene, this.camera);
-    }
-    else {
-      this.renderer.render(this.scene, this.camera, this.renderTarget);
-      this.renderer.render(this.outputScene, this.camera);
-    }
+    this.renderer.render(this.outputScene, this.camera, this.renderTarget);
   };
 
   return DynamicRenderTextureRunner;

@@ -41,7 +41,7 @@ void main()
   outerAverage /= 7.0;
 
   prevData.r += (prevVel + (2.0 * (outerAverage - prevData.r))) * 0.99;
-  prevData.r *= 0.995;
+  prevData.r *= 0.9999;
 
   vec2 dist;
   for (int i = 0; i < NUM_POINTS; i++) {
@@ -70,8 +70,9 @@ void main()
 
   prevData.g = (prevData.r - prevHeight); // velocity
 
-  prevData.b = norm.y; // y normal
+  // prevData.b = norm.x; // y normal
+  // prevData.a = norm.y; // y normal
 
-	gl_FragColor = vec4(prevData.rgb, 1.0);
+	gl_FragColor = vec4(prevData.rg, norm);
 }
 `;
