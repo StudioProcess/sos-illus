@@ -3,6 +3,14 @@ precision mediump float;
 
 uniform float time;
 
+uniform float noiseSpeed;
+uniform vec2 noiseScale;
+
+uniform float planetPos;
+uniform float planetWidth;
+
+uniform float planetBaseOffset;
+
 varying vec2 vUV;
 
 // #region noise
@@ -124,13 +132,13 @@ void main()
   vec4 color = vec4(1);
 
   vec3 noisePosition;
-  noisePosition.x = vUV.x * 30.0;
-  noisePosition.y = vUV.y * 100.0;
-  noisePosition.z = time * 0.1;
+  noisePosition.x = vUV.x * noiseScale.x;
+  noisePosition.y = vUV.y * noiseScale.y;
+  noisePosition.z = time * noiseSpeed;
 
   color.x = (vUV.x - 0.5) * 20.0;
 
-  float isPlanet = cubicPulse(0.5, 0.05, vUV.x);
+  float isPlanet = cubicPulse(planetPos, planetWidth, vUV.x);
 
   color.y = (vUV.y - 0.5) * 20.0;
   color.y += snoise(noisePosition) * mix(
@@ -140,7 +148,7 @@ void main()
   );
 
 
-  color.y -= isPlanet * 4.0;
+  color.y -= isPlanet * planetBaseOffset;
 
   color.z = 0.0;
   
