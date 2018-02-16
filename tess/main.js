@@ -1,6 +1,10 @@
 import * as tilesaver from '../app/tilesaver.js';
 import generateGui from "../shared/generateGui.js";
 
+import getInstancedSplineDotsGeometry from "../shared/getInstancedSplineDotsGeometry.js";
+
+import dotVS from "../shaders/tessDotVS.js";
+
 const W = 1280;
 const H = 720;
 
@@ -14,8 +18,10 @@ const clock = new THREE.Clock();
 
 const positionsTextureRunner = new DynamicRenderTextureRunner();
 
-const lineSubdivisions = 1024; // power of two please
+const lineSubdivisions = 256; // power of two please
 const numLines = 8; // power of two please
+
+const numDots = Math.floor(lineSubdivisions / 6);
 
 const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
@@ -42,6 +48,9 @@ const uniforms = {
   },
 
   lineWeight: {type: "f", value: 0.05},
+
+  dotSize: {type: "f", value: 0.14},
+  dotRandomOffset: {type: "f", value: 0.05},
 
   noiseAmount: {
     type: "2fv",
@@ -112,6 +121,19 @@ function setup() {
   );
   lines.frustumCulled = false;
   scene.add(lines);
+  
+  const dots = new THREE.Mesh(
+    getInstancedSplineDotsGeometry(20, numDots, numLines),
+    new THREE.RawShaderMaterial({
+      vertexShader: dotVS,
+      fragmentShader: tessLineFS,
+      uniforms,
+      side: THREE.DoubleSide,
+      // wireframe: true
+    })
+  );
+  dots.frustumCulled = false;
+  scene.add(dots);
 
   onResize();
   window.addEventListener("resize", onResize);
