@@ -173,8 +173,6 @@ void main()	{
   fadeScaler = clamp(fadeScaler, 0.0, 1.0);
   transformed.xy += position.xy * (transformed.w * dotSize * fadeScaler);
 
-  transformed.z += 0.1;
-
 	gl_Position = projectionMatrix * transformed;
 	// gl_Position = vec4(position, 0.0, 1.0);
 }`;
