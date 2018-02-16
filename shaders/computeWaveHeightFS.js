@@ -46,6 +46,26 @@ void main()
 
   outerAverage /= averageDivider;
 
+
+  // vec2 minEdges = computeResolution;
+  // minEdges *= 1.0;
+  
+  // vec2 maxEdges = computeResolution;
+  // maxEdges *= 4.0;
+
+  // float outerEdges = smoothstep(minEdges.x, maxEdges.x, vUV.x);
+  // outerEdges *= smoothstep(1.0 - minEdges.x, 1.0 - maxEdges.x, vUV.x);
+
+  // outerEdges *= smoothstep(minEdges.y, maxEdges.y, vUV.y);
+  // outerEdges *= smoothstep(1.0 - minEdges.y, 1.0 - maxEdges.y, vUV.y);
+
+  // outerAverage = mix(
+  //   prevData.r,
+  //   outerAverage,
+  //   outerEdges
+  // );
+
+
   prevData.r += (prevVel + (attack * (outerAverage - prevData.r))) * decay;
   prevData.r *= engeryReduce;
 
@@ -78,6 +98,8 @@ void main()
 
   // prevData.b = norm.x; // y normal
   // prevData.a = norm.y; // y normal
+
+  // prevData.r = outerEdges;
 
 	gl_FragColor = vec4(prevData.rg, norm);
 }

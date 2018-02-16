@@ -14,8 +14,8 @@ const clock = new THREE.Clock();
 
 const heightPingPong = new PingPongRunner();
 
-const renderResolutionX = 512;
-const renderResolutionY = 512;
+const renderResolutionX = 1024;
+const renderResolutionY = 1024;
 
 const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
@@ -33,14 +33,29 @@ const uniforms = {
   cornerEffect: {type: "f", value: 0.75},
   averageDivider: {type: "f", value: 7.00001},
 
-  frequency: {type: "f", value: 0.3},
-  onDuration: {type: "f", value: 0.05},
+  colorEdge: {type: "f", value: 0.0,  min: -1.0, max: 1.0, step: 0.0001},
+  colorEdgeWidth: {type: "f", value: 0.1}, min: -0.2, max: 0.2, step: 0.0001,
 
   pointPositions: {
     type: "v3v",
     value: [
       new THREE.Vector3( 0.5, 0.8, 0.0 ), 
       new THREE.Vector3( 0.5, 0.5, 0.0 )
+    ]
+  },
+
+  pointFrequencies: {
+    type: "2fv",
+    value: [
+      0.3,
+      0.4
+    ]
+  },
+  pointOnDurations: {
+    type: "2fv",
+    value: [
+      0.05,
+      0.05
     ]
   }
 };
@@ -54,7 +69,7 @@ function main() {
   
   loop(); // start game loop
 
-  tilesaver.init(renderer, scene, camera, TILES);
+  tilesaver.init(renderer, scene, camera, 1.0);
   generateGui(uniforms);
 }
 
@@ -100,8 +115,8 @@ function setup() {
   waves.frustumCulled = false;
   scene.add(waves);
 
-  onResize();
-  window.addEventListener("resize", onResize);
+  // onResize();
+  // window.addEventListener("resize", onResize);
 
   clock.start();
 }
@@ -111,6 +126,14 @@ function onResize() {
   
   camera.aspect = window.innerWidth / window.innerHeight;
   uniforms.aspectRatio.value = camera.aspect;
+  camera.updateProjectionMatrix();
+}
+
+function resizeForRendering() {
+  renderer.setSize(W * TILES, H * TILES);
+  
+  camera.aspect = W / H;
+  uniforms.aspectRatio.value = W / H;
   camera.updateProjectionMatrix();
 }
 
@@ -124,7 +147,7 @@ function loop(time) { // eslint-disable-line no-unused-vars
 
     for (let i = 0, l = uniforms.pointPositions.value.length; i < l; i++) {
       uniforms.pointPositions.value[i].z = 
-        uniforms.time.value % uniforms.frequency.value < uniforms.onDuration.value ? 1.0 : 0.0;
+        uniforms.time.value % uniforms.pointFrequencies.value[i] < uniforms.pointOnDurations.value[i] ? 1.0 : 0.0;
     }
   }
   
@@ -142,9 +165,12 @@ document.addEventListener('keydown', e => {
     console.log('space');
     RENDERING = !RENDERING;
   } else if (e.key == 'e') {
+    resizeForRendering();
+
     tilesaver.save().then(
       (f) => {
         console.log(`Saved to: ${f}`);
+        // onResize();
         // loop();
       }
     );
