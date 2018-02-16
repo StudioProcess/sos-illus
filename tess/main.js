@@ -41,6 +41,8 @@ const uniforms = {
     ]
   },
 
+  lineWeight: {type: "f", value: 0.05},
+
   noiseAmount: {
     type: "2fv",
     value: [0.2, 1.4],

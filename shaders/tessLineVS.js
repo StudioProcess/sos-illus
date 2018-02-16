@@ -9,6 +9,7 @@ uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 
 uniform float time;
+uniform float lineWeight;
 
 attribute float extrude;
 
@@ -50,7 +51,7 @@ void main()	{
   transformed.xyz = curPoint.xyz;
 
   // extrude line
-  transformed.xy += (extrude * 0.05 * curPoint.w) * extrudeV;
+  transformed.xy += (extrude * lineWeight * curPoint.w) * extrudeV;
 
 	gl_Position = projectionMatrix * transformed;
 }`;
