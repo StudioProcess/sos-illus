@@ -10,24 +10,34 @@ uniform vec3 point0;
 uniform vec3 point1;
 uniform vec3 point2;
 
+uniform vec3 linesFade;
+
 uniform float offsetDistance;
 
 uniform float lineWeight;
 
 uniform float windings;
+uniform float rotationSpeed;
 
 attribute vec3 position;
 attribute float normId;
 
-uniform float rotationSpeed;
+varying vec4 color;
 
-const float PI = 3.14159265359; 
+const float PI = 3.14159265359;
 
 vec3 Spline(vec3 p1, vec3 p2, vec3 p3, float value) {
 	vec3 one = mix(p1, p2, value);
 	vec3 two = mix(p2, p3, value);
 
   return mix(one, two, value);
+}
+
+float cubicPulse( float c, float w, float x ) {
+    x = abs(x - c);
+    if( x > w ) return 0.0;
+    x /= w;
+    return 1.0 - x*x*(3.0 - 2.0*x);
 }
 
 vec4 quat_from_axis_angle(vec3 axis, float angle)
@@ -115,8 +125,13 @@ void main()	{
     position.z
   );
 
-  transformed.xy += (position.x * lineWeight) * extrudeV;
+  float fadeScaler = linesFade.z * cubicPulse(linesFade.x, linesFade.y, normId);
+  fadeScaler = clamp(fadeScaler, 0.0, 1.0);
+
+  transformed.xy += (position.x * lineWeight * fadeScaler) * extrudeV;
   // transformed.xy += position.xy * transformed.w;
+
+  color = vec4(vec3(1.0), 1.0);
 
 	gl_Position = projectionMatrix * transformed;
 	// gl_Position = vec4(position, 0.0, 1.0);

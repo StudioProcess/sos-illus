@@ -6,6 +6,9 @@ uniform mat4 projectionMatrix;
 
 uniform float time;
 
+uniform vec3 pointsFadeInner;
+uniform vec3 pointsFadeOuter;
+
 uniform vec3 point0;
 uniform vec3 point1;
 uniform vec3 point2;
@@ -14,11 +17,14 @@ uniform float offsetDistance;
 uniform float windings;
 
 uniform float dotSize;
+uniform float rotationSpeed;
+
+uniform vec3 inColor;
 
 attribute vec2 position;
 attribute float normId;
 
-uniform float rotationSpeed;
+varying vec4 color;
 
 const float PI = 3.14159265359; 
 
@@ -27,6 +33,13 @@ vec3 Spline(vec3 p1, vec3 p2, vec3 p3, float value) {
 	vec3 two = mix(p2, p3, value);
 
   return mix(one, two, value);
+}
+
+float cubicPulse( float c, float w, float x ) {
+    x = abs(x - c);
+    if( x > w ) return 0.0;
+    x /= w;
+    return 1.0 - x*x*(3.0 - 2.0*x);
 }
 
 vec4 quat_from_axis_angle(vec3 axis, float angle)
@@ -76,7 +89,11 @@ void main()	{
     normId
   );
 
+  float fadeScaler = pointsFadeInner.z * cubicPulse(pointsFadeInner.x, pointsFadeInner.y, normId);
+
   #if defined( OFFSET_DOT )
+  fadeScaler = pointsFadeOuter.z * cubicPulse(pointsFadeOuter.x, pointsFadeOuter.y, normId);
+
   vec3 forwardV = Spline(
     point0,
     point1,
@@ -95,7 +112,12 @@ void main()	{
   #endif
 
   transformed = modelViewMatrix * transformed;
-  transformed.xy += position.xy * (transformed.w * dotSize);
+
+
+  fadeScaler = clamp(fadeScaler, 0.0, 1.0);
+  transformed.xy += position.xy * (transformed.w * dotSize * fadeScaler);
+
+  color = vec4(vec3(1.0), 1.0);
 
 	gl_Position = projectionMatrix * transformed;
 	// gl_Position = vec4(position, 0.0, 1.0);

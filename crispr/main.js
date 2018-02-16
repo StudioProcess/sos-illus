@@ -28,6 +28,17 @@ const uniforms = {
 
   windings: {type: "f", value: 3.0},
   rotationSpeed: {type: "f", value: 1.0},
+
+  pointsFadeInner: {type: "3fv", value: [0.5, 0.5, 5.0001]},
+  pointsFadeOuter: {type: "3fv", value: [0.5, 0.5, 5.0001]},
+
+  linesFade: {type: "3fv", value: [0.5, 0.5, 5.0001]},
+
+  colorGroup0A: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
+  colorGroup0B: {type: "3fv", value: [0.5, 0.5, 0.5], color: true},
+
+  colorGroup1A: {type: "3fv", value: [1.0, 0.0, 0.0], color: true},
+  colorGroup1B: {type: "3fv", value: [0.0, 1.0, 0.0], color: true},
 };
 
 main();
