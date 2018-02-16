@@ -6,7 +6,7 @@ export default function init(uniforms) {
   for (let i = 0, l = keys.length; i < l; i++) {
     const uniform = uniforms[keys[i]];
 
-    if (uniform.hideinGui === true) {
+    if (uniform.hideinGui === true || uniform.type === undefined) {
       continue;
     }
 
