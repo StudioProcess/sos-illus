@@ -16,6 +16,11 @@ uniform float offsetDistance;
 
 uniform float lineWeight;
 
+uniform vec3 colorGroup0A;
+uniform vec3 colorGroup0B;
+uniform vec3 colorGroup1A;
+uniform vec3 colorGroup1B;
+
 uniform float windings;
 uniform float rotationSpeed;
 
@@ -31,6 +36,48 @@ vec3 Spline(vec3 p1, vec3 p2, vec3 p3, float value) {
 	vec3 two = mix(p2, p3, value);
 
   return mix(one, two, value);
+}
+
+float rand(vec2 co){
+  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+vec3 getColor(vec2 noisePos, float side) {
+  float pickedGroup = clamp(
+    (rand(noisePos) - 0.5) * 9999.9,
+    0.0,
+    1.0
+  );
+
+  float pickedSide = clamp(
+    (rand(noisePos.yx) - 0.5) * 9999.9,
+    0.0,
+    1.0
+  );
+
+  pickedSide = mix(
+    pickedSide,
+    1.0 - pickedSide,
+    side
+  );
+
+  vec3 colorStart = mix(
+    colorGroup0A,
+    colorGroup1A,
+    pickedGroup
+  );
+
+  vec3 colorEnd = mix(
+    colorGroup0B,
+    colorGroup1B,
+    pickedGroup
+  );
+
+  return mix(
+    colorStart,
+    colorEnd,
+    pickedSide
+  );
 }
 
 float cubicPulse( float c, float w, float x ) {
@@ -131,7 +178,10 @@ void main()	{
   transformed.xy += (position.x * lineWeight * fadeScaler) * extrudeV;
   // transformed.xy += position.xy * transformed.w;
 
-  color = vec4(vec3(1.0), 1.0);
+   color = vec4(
+    getColor(vec2(normId, 1.0), position.z),
+    1.0
+  );
 
 	gl_Position = projectionMatrix * transformed;
 	// gl_Position = vec4(position, 0.0, 1.0);

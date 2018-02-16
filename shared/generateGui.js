@@ -53,6 +53,11 @@ export function addArraySlider(gui, uniform, name) {
         }
       });
 
+    // auto set colors
+    for (let i = 0, l = uniform.value.length; i < l; i++) {
+      uniform.value[i] = uniform.value[i] / 255.0;
+    }
+
     return;
   }
 
