@@ -38,6 +38,24 @@ export function addSlider(gui, uniform, name) {
 }
 
 export function addArraySlider(gui, uniform, name) {
+  if (uniform.color === true) {
+    const target = {value: uniform.value};
+
+    for (let i = 0, l = uniform.value.length; i < l; i++) {
+      target.value[i] = Math.round(target.value[i] * 255.0);
+    }
+
+    gui.addColor(target, "value")
+      .name(name)
+      .onChange((value) => {
+        for (let i = 0, l = uniform.value.length; i < l; i++) {
+          uniform.value[i] = value[i] / 255.0;
+        }
+      });
+
+    return;
+  }
+
   const folder = gui.addFolder(name);
 
   for (let i = 0, l = uniform.value.length; i < l; i++) {
