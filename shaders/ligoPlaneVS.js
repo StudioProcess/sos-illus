@@ -63,7 +63,7 @@ vec2 getNormal(vec2 p0, vec2 p1, vec2 p2) {
 vec2 getTransformedUV(vec2 uv) {
   uv -= 0.5;
   uv *= uvScale;
-  vUV = rotate(vUV, uvRotation);
+  uv = rotate(uv, uvRotation);
   uv -= uvTranslate;
   uv += 0.5;
   return uv;
