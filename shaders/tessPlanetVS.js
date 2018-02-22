@@ -21,6 +21,7 @@ uniform float noiseScale;
 attribute vec3 position;
 
 varying float vHeightVal;
+varying float vDisplaceNorm;
 varying float facing;
 
 // #region noise4d
@@ -155,6 +156,14 @@ float snoise(vec4 v)
   }
 // #endregion
 
+float inverseLerpUnclamped(
+  float min,
+  float max,
+  float value
+) {
+  return (value - min) / (max - min);
+}
+
 void main()	{
   vec3 vPosition = position;
 
@@ -175,6 +184,8 @@ void main()	{
     float displacement = max(noiseMinValue, snoise(noisePosition));
     vPosition += (displacement * displacementDistance) * position;
   #endif
+
+  vDisplaceNorm = inverseLerpUnclamped(noiseMinValue, 1.0, displacement);
 
   vHeightVal = length(vPosition);
 

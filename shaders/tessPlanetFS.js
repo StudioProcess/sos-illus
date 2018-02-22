@@ -11,7 +11,14 @@ uniform float facingCullWidth;
 uniform float outerOpacity;
 uniform float innerOpacity;
 
+uniform vec3 outerColor0;
+uniform vec3 outerColor1;
+
+uniform vec3 innerColor0;
+uniform vec3 innerColor1;
+
 varying float vHeightVal;
+varying float vDisplaceNorm;
 varying float facing;
 
 
@@ -32,10 +39,26 @@ void main() {
 
   alpha *= smoothstep(facingCull - facingCullWidth, facingCull + facingCullWidth, facing);
 
+  vec3 color;
+
 #if defined( INNER)
-    gl_FragColor = vec4(vec3(2.0), alpha * innerOpacity);
+    color = mix(
+      innerColor0,
+      innerColor1,
+      vDisplaceNorm
+    );
+
+    alpha *= innerOpacity;
   #else
-    gl_FragColor = vec4(vec3(1.0), alpha * outerOpacity);
+    color = mix(
+      outerColor0,
+      outerColor1,
+      vDisplaceNorm
+    );
+    
+    alpha *= outerOpacity;
   #endif
+
+  gl_FragColor = vec4(color, alpha);
 }
 `;

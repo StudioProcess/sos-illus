@@ -8,7 +8,7 @@ const W = 1280;
 const H = 720;
 
 let RENDERING = false;
-let TILES = 2;
+let TILES = 3;
 
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
@@ -29,6 +29,12 @@ const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
   aspectRatio: {type: "f", value: W / H, hideinGui: true},
 
+  outerColor0: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
+  outerColor1: {type: "3fv", value: [0.8, 0.8, 0.8], color: true},
+
+  innerColor0: {type: "3fv", value: [0.5, 0.5, 0.5], color: true},
+  innerColor1: {type: "3fv", value: [0.3, 0.3, 0.3], color: true},
+
   radius: {type: "f", value: 7.5, step: 0.1},
   displacementDistance: {type: "f", value: 1.4, step: 0.01},
 
@@ -40,8 +46,8 @@ const uniforms = {
   noiseMinValue: {type: "f", value: -0.2, min: -1.0, max: 1.0, step: 0.01},
 
   lineStepSize: {type: "f", value: 0.1, min: 0.0, step: 0.01},
-  lineWeight: {type: "f", value: 0.005, min: 0.0, step: 0.001},
-  lineSmoothing: {type: "f", value: 4.0, min: 0.0, step: 0.001},
+  lineWeight: {type: "f", value: 0.008, min: 0.0, step: 0.001},
+  lineSmoothing: {type: "f", value: 6.0, min: 0.0, step: 0.001},
 
   facingCull: {type: "f", value: -0.7, min: -1.0, max: 1.0, step: 0.001},
   facingCullWidth: {type: "f", value: 0.5, min: 0.0, step: 0.001},
