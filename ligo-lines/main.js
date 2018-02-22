@@ -22,6 +22,8 @@ const heightPingPong = new PingPongRunner();
 
 const renderResolutionX = 1024;
 const renderResolutionY = 1024;
+const fixedFrameRate = 1.0 / 24.0;
+let deltaCounter = fixedFrameRate + 0.1;
 
 let frameRequest;
 
@@ -122,7 +124,7 @@ function setup() {
   );
 
   const waves = new THREE.Mesh(
-    getInstancedSplineGeometry(renderResolutionX, renderResolutionY),
+    getInstancedSplineGeometry(renderResolutionX, renderResolutionY / 2),
     new THREE.RawShaderMaterial({
       vertexShader: ligoPlaneVS,
       fragmentShader: ligoPlaneFS,
@@ -155,13 +157,16 @@ function onResize() {
 function loop(time) { // eslint-disable-line no-unused-vars
 
   const delta = Math.min(1.0 / 20.0, clock.getDelta());
+  deltaCounter += delta;
 
   if (!RENDERING) {
-    uniforms.time.value += delta;
+    if (deltaCounter > fixedFrameRate) {
+      uniforms.time.value += fixedFrameRate;
 
-    for (let i = 0, l = uniforms.pointPositions.value.length; i < l; i++) {
-      uniforms.pointPositions.value[i].z = 
-        uniforms.time.value % uniforms.pointFrequencies.value[i] < uniforms.pointOnDurations.value[i] ? 1.0 : 0.0;
+      for (let i = 0, l = uniforms.pointPositions.value.length; i < l; i++) {
+        uniforms.pointPositions.value[i].z = 
+          uniforms.time.value % uniforms.pointFrequencies.value[i] < uniforms.pointOnDurations.value[i] ? 1.0 : 0.0;
+      }
     }
   }
   
@@ -169,7 +174,12 @@ function loop(time) { // eslint-disable-line no-unused-vars
     frameRequest = requestAnimationFrame( loop );
   }
 
-  heightPingPong.render();
+
+  if (deltaCounter > fixedFrameRate) {
+    heightPingPong.render();
+
+    deltaCounter %= fixedFrameRate;
+  }
   renderer.render( scene, camera );
   
 }
