@@ -68,26 +68,41 @@ export function addArraySlider(gui, uniform, name) {
 
     const target = {value: uniform.value[i]};
 
-    const slider = folder.add(target, "value")
+    const slider = folder.add(uniform.value, i.toFixed(0))
       .name(uniform.gui ? uniform.gui[i].name : i);
 
-    // if (uniform.gui[i].min !== undefined) {
-    //   slider.min(uniform.gui[i].min);
-    // }
+    if (uniform.min !== undefined) {
+      slider.min(uniform.min);
+    }
 
-    // if (uniform.gui[i].max !== undefined) {
-    //   slider.max(uniform.gui[i].max);
-    // }
+    if (uniform.max !== undefined) {
+      slider.max(uniform.max);
+    }
 
-    // if (uniform.gui[i].step !== undefined) {
-    //   slider.step(uniform.gui[i].step);
-    // }
+    if (uniform.step !== undefined) {
+      slider.step(uniform.step);
+    }
 
-    slider.onChange(
-      (value) => {
-        uniform.value[i] = value;
+    if (uniform.gui !== undefined) {
+      if (uniform.gui[i].min !== undefined) {
+        slider.min(uniform.gui[i].min);
       }
-    );
+
+      if (uniform.gui[i].max !== undefined) {
+        slider.max(uniform.gui[i].max);
+      }
+
+      if (uniform.gui[i].step !== undefined) {
+        slider.step(uniform.gui[i].step);
+      }
+    }
+
+    // slider.onChange(
+    //   (value) => {
+    //     console.log(value);
+    //     uniform.value[i] = value;
+    //   }
+    // );
   }
 }
 

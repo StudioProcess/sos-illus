@@ -66,3 +66,5 @@ const PingPongRunner = (function() {
 
   return PingPongRunner;
 })();
+
+export default PingPongRunner;
