@@ -1,4 +1,4 @@
-export default function init(uniforms) {
+export function initGui(uniforms) {
   const keys = Object.keys(uniforms);
 
   const gui = new dat.GUI();
@@ -18,6 +18,8 @@ export default function init(uniforms) {
       addV3ArraySlider(gui, uniform, keys[i])
     }
   }
+
+  return gui;
 }
 
 export function addSlider(gui, uniform, name) {
@@ -141,4 +143,35 @@ export function addV3ArraySlider(gui, uniform, name) {
         }
       );
   }
+}
+
+export function addThreeV3Slider(gui, vector, name) {
+  const folder = gui.addFolder(name);
+
+  // x
+  folder.add(vector, "x")
+    .name("x")
+    .onChange(
+      (value) => {
+        vector.x = value;
+      }
+    );
+
+  // y
+  folder.add(vector, "y")
+    .name("y")
+    .onChange(
+      (value) => {
+        vector.y = value;
+      }
+    );
+
+  // z
+  folder.add(vector, "z")
+    .name("z")
+    .onChange(
+      (value) => {
+        vector.z = value;
+      }
+    );
 }

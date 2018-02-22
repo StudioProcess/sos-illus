@@ -1,5 +1,7 @@
 import * as tilesaver from '../app/tilesaver.js';
-import generateGui from "../shared/generateGui.js";
+import {initGui} from "../shared/generateGui.js";
+
+import PingPongRunner from "../shared/pingPongRunner.js";
 
 const W = 1280;
 const H = 720;
@@ -70,7 +72,7 @@ function main() {
   loop(); // start game loop
 
   tilesaver.init(renderer, scene, camera, 1.0);
-  generateGui(uniforms);
+  initGui(uniforms);
 }
 
 

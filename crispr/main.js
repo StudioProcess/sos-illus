@@ -1,5 +1,5 @@
 import * as tilesaver from '../app/tilesaver.js';
-import generateGui from "../shared/generateGui.js";
+import {initGui} from "../shared/generateGui.js";
 
 const W = 1280;
 const H = 720;
@@ -50,7 +50,7 @@ function main() {
   loop(); // start game loop
   
   tilesaver.init(renderer, scene, camera, TILES);
-  generateGui(uniforms);
+  initGui(uniforms);
 }
 
 
