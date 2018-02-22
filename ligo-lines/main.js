@@ -191,7 +191,7 @@ document.addEventListener('keydown', e => {
 
     if (!RENDERING) {
       cancelAnimationFrame(frameRequest);
-      loop;
+      loop();
     }
   } else if (e.key == 'e') {
     tilesaver.save().then(
