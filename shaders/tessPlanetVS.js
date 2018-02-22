@@ -160,8 +160,9 @@ void main()	{
 
   vec4 noisePosition;
   noisePosition.xyz = position;
+
   noisePosition.xyz *= noiseScale;
-  noisePosition.w = time * noiseSpeed;
+  noisePosition.w = time * noiseSpeed + (modelViewMatrix[3][0] + modelViewMatrix[3][1] + modelViewMatrix[3][1]);
 
   #if defined( INNER)
     noisePosition.x += 999.9;

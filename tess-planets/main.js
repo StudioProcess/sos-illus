@@ -19,6 +19,12 @@ let gui;
 
 // const numDots = Math.floor(lineSubdivisions / 6);
 
+const planetPositions = [
+  {x: -4.0, y: 0.0, z: 0.0},
+  {x: -32.0, y: 22.0, z: -29.0},
+  {x: 24.0, y: -12.0, z: -30.0},
+];
+
 const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
   aspectRatio: {type: "f", value: W / H, hideinGui: true},
@@ -102,21 +108,31 @@ function setup() {
     }
   });
 
-  const planetInner = new THREE.Mesh(
-    geometry,
-    innerMaterial
-  );
-  planetInner.frustumCulled = false;
-  scene.add(planetInner);
+  for (let i = 0, l = planetPositions.length; i < l; i++) {
+    const planetGroup = new THREE.Group();
 
-  // addThreeV3Slider(gui, planetInner.position, "planet Position");
+    planetGroup.position.x = planetPositions[i].x;
+    planetGroup.position.y = planetPositions[i].y;
+    planetGroup.position.z = planetPositions[i].z;
 
-  const planet = new THREE.Mesh(
-    geometry,
-    outerMaterial
-  );
-  planet.frustumCulled = false;
-  scene.add(planet);
+    addThreeV3Slider(gui, planetGroup.position, `Planet ${i}`);
+
+    const planetInner = new THREE.Mesh(
+      geometry,
+      innerMaterial
+    );
+    planetInner.frustumCulled = false;
+    planetGroup.add(planetInner);
+
+    const planet = new THREE.Mesh(
+      geometry,
+      outerMaterial
+    );
+    planet.frustumCulled = false;
+    planetGroup.add(planet);
+
+    scene.add(planetGroup);
+  }
 
   onResize();
   window.addEventListener("resize", onResize);
