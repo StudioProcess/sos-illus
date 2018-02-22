@@ -1,4 +1,4 @@
-function getInstancedLineGeometry(
+export default function(
   subdivisions,
   count
 ) {

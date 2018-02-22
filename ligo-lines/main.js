@@ -1,5 +1,7 @@
 import * as tilesaver from '../app/tilesaver.js';
 import generateGui from "../shared/generateGui.js";
+
+import getInstancedSplineGeometry from "../shared/getInstancedSplineGeometry.js";
 import PingPongRunner from "../shared/pingPongRunner.js";
 
 import ligoPlaneVS from "../shaders/ligoPlaneVS.js";
@@ -28,6 +30,7 @@ const uniforms = {
   aspectRatio: {type: "f", value: W / H, hideinGui: true},
   computeResolution: {type: "2fv", value: [1.0 / renderResolutionX, 1.0 / renderResolutionY], hideinGui: true},
 
+  extends: {type: "2fv", value: [40.0, 40.0], min: 0.0, max: 100.0, step: 1.0001},
 
   uvScale: {type: "2fv", value: [1.0, 1.0], min: 0.0, max: 10.0, step: 0.0001},
   uvRotation: {type: "f", value: 0.0, min: -Math.PI, max: Math.PI, step: 0.0001},
@@ -40,11 +43,9 @@ const uniforms = {
   engeryReduce: {type: "f", value: 0.9999, min: 0.1, max: 2.0, step: 0.0001},
 
   displaceGain: {type: "f", value: 0.13, min: 0.0, max: 2.0, step: 0.0001},
-  displaceHeight: {type: "f", value: 0.1, min: -2.0, max: 2.0, step: 0.0001},
+  displaceHeight: {type: "f", value: 1.1, min: -2.0, max: 2.0, step: 0.0001},
 
-  numLines: {type: "f", value: 50.0},
-  lineWeight: {type: "f", value: 0.05, min: 0.0, max: 0.1, step: 0.0001},
-  lineSmoothness: {type: "f", value: 2.0, min: 0.0, max: 10.0, step: 0.0001},
+  lineWeight: {type: "f", value: 0.004, min: 0.0, max: 0.1, step: 0.0001},
 
   pointSize: {type: "f", value: 0.01},
 
@@ -121,16 +122,16 @@ function setup() {
   );
 
   const waves = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(20.0, 20.0, 253, 253),
+    getInstancedSplineGeometry(renderResolutionX, renderResolutionY),
     new THREE.RawShaderMaterial({
       vertexShader: ligoPlaneVS,
       fragmentShader: ligoPlaneFS,
       uniforms,
       side: THREE.DoubleSide,
-      transparent: true,
-      // wireframe: true
-      depthTest: false,
-      depthWrite: false,
+      // transparent: true,
+      // wireframe: true,
+      // depthTest: false,
+      // depthWrite: false,
     })
   );
   waves.frustumCulled = false;

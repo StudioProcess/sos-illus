@@ -50,10 +50,12 @@ const PingPongRunner = (function() {
       defines
     });
     this.outputScene = new THREE.Scene();
-    this.outputScene.add(new THREE.Mesh(
+    const mesh = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(2.0, 2.0, 1, 1),
       this.outputMaterial
-    ));
+    );
+    mesh.frustumCulled = false;
+    this.outputScene.add(mesh);
   };
 
   PingPongRunner.prototype.render = function() {
