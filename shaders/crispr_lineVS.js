@@ -20,6 +20,9 @@ uniform float offsetDistance;
 
 uniform float lineWeight;
 
+uniform float colorFadeCenter;
+uniform float colorFadeWidth;
+
 uniform vec3 colorGroup0A;
 uniform vec3 colorGroup0B;
 uniform vec3 colorGroup1A;
@@ -271,6 +274,12 @@ void main()	{
    color = vec4(
     getColor(vec2(normId, 1.0), position.z),
     1.0
+  );
+
+  color.rgb *= mix(
+    1.0,
+    colorFadeCenter + colorFadeWidth * cos(angle),
+    position.z
   );
 
 	gl_Position = projectionMatrix * transformed;

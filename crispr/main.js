@@ -3,6 +3,9 @@ import * as capture from '../vendor/capture.js';
 import * as tilesaver from '../app/tilesaver.js';
 import {initGui} from "../shared/generateGui.js";
 
+import fullscreenVS from "../shaders/fullscreenVS.js";
+import backgroundFS from "../shaders/backgroundFS.js";
+
 const W = 1280;
 const H = 720;
 
@@ -14,19 +17,25 @@ let controls; // eslint-disable-line no-unused-vars
 
 const clock = new THREE.Clock();
 
-const numSteps = 40;
+
+const numSteps = 60;
 
 const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
 
-  point0: {type: "3fv", value: [-3.0, -8.0, 0.0]},
+  backgroundColor: {type: "3fv", value: [0.0, 0.0, 0.0], color: true},
+
+  point0: {type: "3fv", value: [-3.0, -18.0, 0.0]},
   point1: {type: "3fv", value: [2.0, 3.0, 1.0]},
-  point2: {type: "3fv", value: [1.0, 10.0, 3.0]},
+  point2: {type: "3fv", value: [1.0, 18.0, 3.0]},
 
   offsetDistance: {type: "f", value: 3.4},
 
   dotSize: {type: "f", value: 1.0},
   lineWeight: {type: "f", value: 0.02},
+
+  colorFadeCenter: {type: "f", value: 0.6, min: 0.0, max: 1.0, step: 0.001},
+  colorFadeWidth: {type: "f", value: 0.4, min: 0.0, max: 1.0, step: 0.001},
 
   windings: {type: "f", value: 3.0},
   rotationSpeed: {type: "f", value: 1.0},
@@ -48,8 +57,6 @@ const uniforms = {
 };
 
 main();
-
-
 function main() {
   setup(); // set up scene
   
@@ -76,6 +83,20 @@ function setup() {
   camera.position.z = 20;
 
   const geometry = getInstancedDotGeometry(20, 0.2, numSteps);
+
+  const background = new THREE.Mesh(
+    new THREE.PlaneBufferGeometry(2.0, 2.0),
+    new THREE.RawShaderMaterial({
+      vertexShader: fullscreenVS,
+      fragmentShader: backgroundFS,
+      uniforms,
+      side: THREE.DoubleSide,
+      depthTest: false,
+      depthWrite: false,
+    })
+  );
+  background.frustumCulled = false;
+  scene.add(background);
 
   const centerDots = new THREE.Mesh(
     geometry,

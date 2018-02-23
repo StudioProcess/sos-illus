@@ -20,6 +20,9 @@ uniform float noiseSpeed;
 uniform float offsetDistance;
 uniform float windings;
 
+uniform float colorFadeCenter;
+uniform float colorFadeWidth;
+
 uniform float dotSize;
 uniform float rotationSpeed;
 
@@ -254,6 +257,8 @@ void main()	{
     getColor(vec2(normId, 1.0), 1.0),
     1.0
   );
+
+  color.rgb *= colorFadeCenter + colorFadeWidth * cos(angle);
   #else
   color = vec4(
     getColor(vec2(normId, 1.0), 0.0),
