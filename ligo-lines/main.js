@@ -13,7 +13,7 @@ import ligoPlaneVS from "../shaders/ligoPlaneVS.js";
 import ligoPlaneFS from "../shaders/ligoPlaneFS.js";
 
 const W = 1280;
-const H = 720;
+const H = 800;
 
 let RENDERING = false;
 let TILES = 2;
@@ -68,7 +68,7 @@ const uniforms = {
   pointPositions: {
     type: "v3v",
     value: [
-      new THREE.Vector3( 0.5, 0.8, 0.0 ), 
+      new THREE.Vector3( 0.5, 0.8, 0.0 ),
       new THREE.Vector3( 0.5, 0.5, 0.0 )
     ]
   },
@@ -93,9 +93,9 @@ main();
 
 
 function main() {
-  
+
   setup(); // set up scene
-  
+
   loop(); // start game loop
 
   tilesaver.init(renderer, scene, camera, TILES);
@@ -104,7 +104,7 @@ function main() {
 
 
 function setup() {
-  
+
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     // alpha: false
@@ -112,7 +112,7 @@ function setup() {
   renderer.setSize( W, H );
   renderer.setPixelRatio( window.devicePixelRatio );
   document.body.appendChild( renderer.domElement );
-  
+
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 75, W / H, 0.01, 1000 );
   controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -161,15 +161,15 @@ function setup() {
   waves.frustumCulled = false;
   scene.add(waves);
 
-  onResize();
-  window.addEventListener("resize", onResize);
+  // onResize();
+  // window.addEventListener("resize", onResize);
 
   clock.start();
 }
 
 function onResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
-  
+
   camera.aspect = window.innerWidth / window.innerHeight;
   uniforms.aspectRatio.value = camera.aspect;
   camera.updateProjectionMatrix();
@@ -186,12 +186,12 @@ function loop(time) { // eslint-disable-line no-unused-vars
       uniforms.time.value += fixedFrameRate;
 
       for (let i = 0, l = uniforms.pointPositions.value.length; i < l; i++) {
-        uniforms.pointPositions.value[i].z = 
+        uniforms.pointPositions.value[i].z =
           uniforms.time.value % uniforms.pointFrequencies.value[i] < uniforms.pointOnDurations.value[i] ? 1.0 : 0.0;
       }
     }
   }
-  
+
   if (!RENDERING) {
     frameRequest = requestAnimationFrame( loop );
   }
@@ -230,11 +230,21 @@ document.addEventListener('keydown', e => {
       document.querySelector('body').webkitRequestFullscreen();
     } else { document.webkitExitFullscreen(); }
   }
-  
+
   else if (e.key == 'c') {
+    renderer.setSize( W, H );
+
+    camera.aspectRatio( W/H );
+    camera.updateProjectionMatrix();
+
     capture.startstop(); // start/stop recording
   }
   else if (e.key == 'v') {
+    renderer.setSize( W, H );
+
+    camera.aspectRatio( W/H );
+    camera.updateProjectionMatrix();
+
     capture.startstop( {startTime:0, timeLimit:1} ); // record 1 second
   }
 });
