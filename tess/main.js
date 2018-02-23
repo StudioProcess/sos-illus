@@ -1,3 +1,5 @@
+import * as capture from '../vendor/capture.js';
+
 import * as tilesaver from '../app/tilesaver.js';
 import {initGui} from "../shared/generateGui.js";
 
@@ -167,6 +169,7 @@ function loop(time) { // eslint-disable-line no-unused-vars
 
   positionsTextureRunner.render();
   renderer.render( scene, camera );
+  capture.update( renderer );
 }
 
 document.addEventListener('keydown', e => {
@@ -180,5 +183,16 @@ document.addEventListener('keydown', e => {
         loop();
       }
     );
+  } else if (e.key == 'f') { // f .. fullscreen
+    if (!document.webkitFullscreenElement) {
+      document.querySelector('body').webkitRequestFullscreen();
+    } else { document.webkitExitFullscreen(); }
+  }
+  
+  else if (e.key == 'c') {
+    capture.startstop(); // start/stop recording
+  }
+  else if (e.key == 'v') {
+    capture.startstop( {startTime:0, timeLimit:1} ); // record 1 second
   }
 });
