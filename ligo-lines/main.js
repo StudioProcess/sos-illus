@@ -234,7 +234,7 @@ document.addEventListener('keydown', e => {
   else if (e.key == 'c') {
     renderer.setSize( W, H );
 
-    camera.aspectRatio( W/H );
+    camera.aspectRatio = W/H;
     camera.updateProjectionMatrix();
 
     capture.startstop(); // start/stop recording
@@ -242,7 +242,7 @@ document.addEventListener('keydown', e => {
   else if (e.key == 'v') {
     renderer.setSize( W, H );
 
-    camera.aspectRatio( W/H );
+    camera.aspectRatio = W/H;
     camera.updateProjectionMatrix();
 
     capture.startstop( {startTime:0, timeLimit:1} ); // record 1 second

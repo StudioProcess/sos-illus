@@ -27,7 +27,7 @@ let gui;
 // const numDots = Math.floor(lineSubdivisions / 6);
 
 const planetPositions = [
-  {x: -8.3, y: 0.0, z: 0.0},
+  {x: -6.7, y: -5.0, z: 0.0}, // {x: -8.3, y: 0.0, z: 0.0}
   {x: 18.0, y: 30.0, z: -167.0},
   {x: 27.0, y: -8.0, z: -60.0},
 ];
@@ -36,13 +36,21 @@ const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
   aspectRatio: {type: "f", value: W / H, hideinGui: true},
 
-  backgroundColor: {type: "3fv", value: [0.0, 0.0, 0.0], color: true},
+  backgroundColor: {type: "3fv", value: [0.03, 0.02, 0.06], color: true},
 
-  outerColor0: {type: "3fv", value: [0.03, 0.2, 0.65], color: true},
-  outerColor1: {type: "3fv", value: [0.63, 0.79, 0.99], color: true},
+  // red-ish
+  outerColor0: {type: "3fv", value: [0.03, 0.2, 0.65], color: true}, // value: [0.03, 0.2, 0.65]
+  outerColor1: {type: "3fv", value: [0.63, 0.79, 0.99], color: true}, // value: [0.63, 0.79, 0.99]
 
-  innerColor0: {type: "3fv", value: [0.99, 0.27, 0.12], color: true},
-  innerColor1: {type: "3fv", value: [0.91, 0.76, 0.63], color: true},
+  innerColor0: {type: "3fv", value: [0.99, 0.27, 0.12], color: true}, // value: [0.99, 0.27, 0.12]
+  innerColor1: {type: "3fv", value: [0.91, 0.76, 0.63], color: true}, // value: [0.91, 0.76, 0.63]
+
+  // blue-green-ish
+  // outerColor0: {type: "3fv", value: [0.71, 0.71, 0.74], color: true},
+  // outerColor1: {type: "3fv", value: [0.46, 0.7, 1.0], color: true},
+  //
+  // innerColor0: {type: "3fv", value: [0.14, 0.19, 0.13], color: true},
+  // innerColor1: {type: "3fv", value: [0.07, 0.09, 0.26], color: true},
 
   radius: {type: "f", value: 7.5, step: 0.1},
   displacementDistance: {type: "f", value: 0.19, step: 0.01}, // 1.4 , 0.01
@@ -70,8 +78,8 @@ const uniforms = {
   minDistance: {type: "f", value: -50.0},
   maxDistance: {type: "f", value: 200.0},
 
-  saturationValue: {type: "f", value: 0.5},
-  brightnessValue: {type: "f", value: 0.3},
+  saturationValue: {type: "f", value: 0.25}, // 0.5
+  brightnessValue: {type: "f", value: 0.03}, // 0.3
 };
 
 main();
@@ -193,7 +201,7 @@ function loop(time) { // eslint-disable-line no-unused-vars
   const delta = Math.min(1.0 / 20.0, clock.getDelta());
 
   if (!RENDERING) {
-    uniforms.time.value += delta;
+    uniforms.time.value += 1/30;// delta;
   }
 
   if (!RENDERING) {
