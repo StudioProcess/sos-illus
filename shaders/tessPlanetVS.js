@@ -21,11 +21,15 @@ uniform float noiseScale;
 uniform vec3 rotationAxis;
 uniform float rotationSpeed;
 
+uniform float minDistance;
+uniform float maxDistance;
+
 attribute vec3 position;
 
 varying float vHeightVal;
 varying float vDisplaceNorm;
 varying float facing;
+varying float distanceVal;
 
 // #region noise4d
 //
@@ -235,5 +239,9 @@ void main()	{
 
   facing = dot(normalMatrix * extrudeV, vec3(0.0, 0.0, 1.0));
 
+
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.0);
+
+  distanceVal = inverseLerpUnclamped(maxDistance, minDistance, gl_Position.z);
+  distanceVal = clamp(distanceVal, 0.0, 1.0);
 }`;

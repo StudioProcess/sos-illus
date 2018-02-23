@@ -17,9 +17,13 @@ uniform vec3 outerColor1;
 uniform vec3 innerColor0;
 uniform vec3 innerColor1;
 
+uniform float saturationValue;
+uniform float brightnessValue;
+
 varying float vHeightVal;
 varying float vDisplaceNorm;
 varying float facing;
+varying float distanceVal;
 
 
 float cubicPulse(float c, float w, float x) {
@@ -27,6 +31,13 @@ float cubicPulse(float c, float w, float x) {
     if( x>w ) return 0.0;
     x /= w;
     return 1.0 - x*x*(3.0-2.0*x);
+}
+
+vec3 saturation(vec3 rgb, float adjustment) {
+    // Algorithm from Chapter 16 of OpenGL Shading Language
+    const vec3 W = vec3(0.2125, 0.7154, 0.0721);
+    vec3 intensity = vec3(dot(rgb, W));
+    return mix(intensity, rgb, adjustment);
 }
 
 void main() {
@@ -59,6 +70,19 @@ void main() {
     alpha *= outerOpacity;
   #endif
 
+  color = mix(
+    saturation(color, saturationValue),
+    color,
+    distanceVal
+  );
+  color *= mix(
+    brightnessValue,
+    1.0,
+    distanceVal
+  );
+  // color *= max(1.0, distanceVal * brightnessValue);
+
   gl_FragColor = vec4(color, alpha);
+  // gl_FragColor = vec4(vec3(distanceVal), alpha);
 }
 `;

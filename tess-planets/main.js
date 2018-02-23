@@ -66,6 +66,12 @@ const uniforms = {
 
   rotationAxis: {type: "3fv", value: [0.4, 1.0, 0.0], min: -1.0, max: 1.0, step: 0.01},
   rotationSpeed:  {type: "f", value: 1.2, min: -10.0, max: 10.0, step: 0.001},
+
+  minDistance: {type: "f", value: -50.0},
+  maxDistance: {type: "f", value: 200.0},
+
+  saturationValue: {type: "f", value: 0.5},
+  brightnessValue: {type: "f", value: 0.3},
 };
 
 main();
