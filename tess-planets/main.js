@@ -87,7 +87,7 @@ function setup() {
   });
 
   renderer.setSize( W, H );
-  // renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setPixelRatio( window.devicePixelRatio );
   document.body.appendChild( renderer.domElement );
 
   scene = new THREE.Scene();
@@ -164,8 +164,8 @@ function setup() {
     scene.add(planetGroup);
   }
 
-  onResize();
-  window.addEventListener("resize", onResize);
+  // onResize();
+  // window.addEventListener("resize", onResize);
 
   clock.start();
 }
@@ -210,11 +210,11 @@ document.addEventListener('keydown', e => {
       document.querySelector('body').webkitRequestFullscreen();
     } else { document.webkitExitFullscreen(); }
   }
-  
+
   else if (e.key == 'c') {
     capture.startstop(); // start/stop recording
   }
   else if (e.key == 'v') {
-    capture.startstop( {startTime:0, timeLimit:1} ); // record 1 second
+    capture.startstop( { timeLimit:10 } ); // record 10 seconds
   }
 });
