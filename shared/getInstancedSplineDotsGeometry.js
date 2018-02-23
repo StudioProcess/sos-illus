@@ -57,7 +57,5 @@ export default function getInstancedSplineDotsGeometry(
 
   geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
 
-  console.log(geometry);
-
   return geometry;
 }

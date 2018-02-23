@@ -1,6 +1,7 @@
 import * as tilesaver from '../app/tilesaver.js';
 import {initGui} from "../shared/generateGui.js";
 
+import fullscreenVS from "../shaders/fullscreenVS.js";
 import PingPongRunner from "../shared/pingPongRunner.js";
 
 const W = 1280;

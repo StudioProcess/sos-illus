@@ -4,6 +4,9 @@ import {initGui} from "../shared/generateGui.js";
 import getInstancedSplineGeometry from "../shared/getInstancedSplineGeometry.js";
 import PingPongRunner from "../shared/pingPongRunner.js";
 
+import fullscreenVS from "../shaders/fullscreenVS.js";
+import backgroundFS from "../shaders/backgroundFS.js";
+
 import ligoPlaneVS from "../shaders/ligoPlaneVS.js";
 import ligoPlaneFS from "../shaders/ligoPlaneFS.js";
 
@@ -31,6 +34,9 @@ const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
   aspectRatio: {type: "f", value: W / H, hideinGui: true},
   computeResolution: {type: "2fv", value: [1.0 / renderResolutionX, 1.0 / renderResolutionY], hideinGui: true},
+
+  backgroundColor: {type: "3fv", value: [0.0, 0.0, 0.0], color: true},
+  lineColor: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
 
   extends: {type: "2fv", value: [40.0, 40.0], min: 0.0, max: 100.0, step: 1.0001},
 
@@ -122,6 +128,20 @@ function setup() {
     renderResolutionX,
     renderResolutionY
   );
+
+  const background = new THREE.Mesh(
+    new THREE.PlaneBufferGeometry(2.0, 2.0),
+    new THREE.RawShaderMaterial({
+      vertexShader: fullscreenVS,
+      fragmentShader: backgroundFS,
+      uniforms,
+      side: THREE.DoubleSide,
+      depthTest: false,
+      depthWrite: false,
+    })
+  );
+  background.frustumCulled = false;
+  scene.add(background);
 
   const waves = new THREE.Mesh(
     getInstancedSplineGeometry(renderResolutionX, renderResolutionY / 2),

@@ -1,4 +1,4 @@
-const fullscreenVS = `
+export default `
 precision mediump float;
 
 uniform float time;

@@ -4,6 +4,8 @@ import {initGui} from "../shared/generateGui.js";
 import getInstancedSplineGeometry from "../shared/getInstancedSplineGeometry.js";
 import getInstancedSplineDotsGeometry from "../shared/getInstancedSplineDotsGeometry.js";
 
+import fullscreenVS from "../shaders/fullscreenVS.js";
+
 import dotVS from "../shaders/tessDotVS.js";
 
 const W = 1280;
