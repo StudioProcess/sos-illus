@@ -16,6 +16,7 @@
   "author": "Process <contact@process.studio> (https://process.studio)",
   "license": "AGPL-3.0",
   "dependencies": {
+    "ccapture.js": "^1.0.7",
     "three": "^0.89.0"
   },
   "devDependencies": {
