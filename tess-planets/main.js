@@ -29,27 +29,27 @@ const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
   aspectRatio: {type: "f", value: W / H, hideinGui: true},
 
-  outerColor0: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
-  outerColor1: {type: "3fv", value: [0.8, 0.8, 0.8], color: true},
+  outerColor0: {type: "3fv", value: [0.03, 0.2, 0.65], color: true},
+  outerColor1: {type: "3fv", value: [0.63, 0.79, 0.99], color: true},
 
-  innerColor0: {type: "3fv", value: [0.5, 0.5, 0.5], color: true},
-  innerColor1: {type: "3fv", value: [0.3, 0.3, 0.3], color: true},
+  innerColor0: {type: "3fv", value: [0.99, 0.27, 0.12], color: true},
+  innerColor1: {type: "3fv", value: [0.91, 0.76, 0.63], color: true},
 
   radius: {type: "f", value: 7.5, step: 0.1},
-  displacementDistance: {type: "f", value: 1.4, step: 0.01},
+  displacementDistance: {type: "f", value: 0.19, step: 0.01}, // 1.4 , 0.01
 
-  innerRadius: {type: "f", value: 6.0, step: 0.1},
-  innerDisplacementDistance: {type: "f", value: 0.8, step: 0.01},
+  innerRadius: {type: "f", value: 7.6, step: 0.1}, // 6.0, 0.1
+  innerDisplacementDistance: {type: "f", value: 0.8, step: 0.01}, // 0.8, 0.01
 
-  noiseSpeed: {type: "f", value: 0.1, step: 0.001},
-  noiseScale: {type: "f", value: 2.0, step: 0.01},
-  noiseMinValue: {type: "f", value: -0.2, min: -1.0, max: 1.0, step: 0.01},
+  noiseSpeed: {type: "f", value: 0.098, step: 0.001}, // 0.1, 0.001
+  noiseScale: {type: "f", value: 7.92, step: 0.01}, // 2.0, 0.01
+  noiseMinValue: {type: "f", value: -0.09, min: -1.0, max: 1.0, step: 0.01}, // -0.2, -1.0, 1.0, 0.01
 
-  lineStepSize: {type: "f", value: 0.1, min: 0.0, step: 0.01},
-  lineWeight: {type: "f", value: 0.008, min: 0.0, step: 0.001},
+  lineStepSize: {type: "f", value: 0.04, min: 0.0, step: 0.01}, // value: 0.1
+  lineWeight: {type: "f", value: 0.021, min: 0.0, step: 0.001}, // value: 0.008
   lineSmoothing: {type: "f", value: 6.0, min: 0.0, step: 0.001},
 
-  facingCull: {type: "f", value: -0.7, min: -1.0, max: 1.0, step: 0.001},
+  facingCull: {type: "f", value: -1, min: -1.0, max: 1.0, step: 0.001}, // value: -0.7
   facingCullWidth: {type: "f", value: 0.5, min: 0.0, step: 0.001},
 
   outerOpacity:  {type: "f", value: 0.55, min: 0.0, max: 1.0, step: 0.001},
@@ -71,15 +71,16 @@ function main() {
 
 
 function setup() {
-  
+
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     // alpha: false
   });
+
   renderer.setSize( W, H );
   // renderer.setPixelRatio( window.devicePixelRatio );
   document.body.appendChild( renderer.domElement );
-  
+
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 75, W / H, 0.01, 1000 );
   controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -90,7 +91,7 @@ function setup() {
     vertexShader,
     fragmentShader,
     uniforms,
-    
+
     side: THREE.DoubleSide,
     // wireframe: true,
     transparent: true,
@@ -148,7 +149,7 @@ function setup() {
 
 function onResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
-  
+
   camera.aspect = window.innerWidth / window.innerHeight;
   uniforms.aspectRatio.value = camera.aspect;
   camera.updateProjectionMatrix();
@@ -162,7 +163,7 @@ function loop(time) { // eslint-disable-line no-unused-vars
   if (!RENDERING) {
     uniforms.time.value += delta;
   }
-  
+
   if (!RENDERING) {
     requestAnimationFrame(loop);
   }
