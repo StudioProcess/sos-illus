@@ -63,6 +63,9 @@ const uniforms = {
 
   outerOpacity:  {type: "f", value: 0.55, min: 0.0, max: 1.0, step: 0.001},
   innerOpacity:  {type: "f", value: 0.7, min: 0.0, max: 1.0, step: 0.001},
+
+  rotationAxis: {type: "3fv", value: [0.4, 1.0, 0.0], min: -1.0, max: 1.0, step: 0.01},
+  rotationSpeed:  {type: "f", value: 1.2, min: -10.0, max: 10.0, step: 0.001},
 };
 
 main();
