@@ -20,9 +20,9 @@ let gui;
 // const numDots = Math.floor(lineSubdivisions / 6);
 
 const planetPositions = [
-  {x: -4.0, y: 0.0, z: 0.0},
-  {x: -32.0, y: 22.0, z: -29.0},
-  {x: 24.0, y: -12.0, z: -30.0},
+  {x: -8.3, y: 0.0, z: 0.0},
+  {x: 18.0, y: 30.0, z: -167.0},
+  {x: 27.0, y: -8.0, z: -60.0},
 ];
 
 const uniforms = {
