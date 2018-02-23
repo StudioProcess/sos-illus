@@ -23,13 +23,17 @@ const uniforms = {
   point1: {type: "3fv", value: [2.0, 3.0, 1.0]},
   point2: {type: "3fv", value: [1.0, 10.0, 3.0]},
 
-  offsetDistance: {type: "f", value: 8.0},
+  offsetDistance: {type: "f", value: 3.4},
 
   dotSize: {type: "f", value: 1.0},
   lineWeight: {type: "f", value: 0.02},
 
   windings: {type: "f", value: 3.0},
   rotationSpeed: {type: "f", value: 1.0},
+
+  noiseOffset: {type: "f", value: 1.0},
+  noiseScale: {type: "f", value: 0.1},
+  noiseSpeed: {type: "f", value: 0.1},
 
   pointsFadeInner: {type: "3fv", value: [0.5, 0.5, 5.0001]},
   pointsFadeOuter: {type: "3fv", value: [0.5, 0.5, 5.0001]},
