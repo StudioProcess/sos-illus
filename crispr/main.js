@@ -27,26 +27,32 @@ let phaseCounter = 0.0;
 const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
 
+  backgroundColor: {type: "3fv", value: [0.92, 0.92, 0.92], color: true},
+
+  colorGroup0A: {type: "3fv", value: [0.11, 0.0, 0.47], color: true},
+  colorGroup0B: {type: "3fv", value: [0.04, 0.01, 0.4], color: true},
+
+  colorGroup1A: {type: "3fv", value: [0.16, 0.06, 0.33], color: true},
+  colorGroup1B: {type: "3fv", value: [0.04, 0.0, 0.32], color: true},
+
   point0Center: {type: "3fv", value: [-3.0, -18.0, 0.0]},
   point0Range: {type: "f", value: 0.0},
   point1Center: {type: "3fv", value: [2.0, 3.0, 1.0]},
   point1Range: {type: "f", value: 0.0},
-  point2Center: {type: "3fv", value: [1.0, 18.0, 3.0]},
+  point2Center: {type: "3fv", value: [1.0, 80.0, 3.0]},
   point2Range: {type: "f", value: 0.0},
 
   phase: {type: "f", value: 4.0, hideinGui: true},
   phaseLength: {type: "f", value: 20.0},
 
-  backgroundColor: {type: "3fv", value: [0.0, 0.0, 0.0], color: true},
-
   point0: {type: "3fv", value: [-3.0, -18.0, 0.0], hideinGui: true},
   point1: {type: "3fv", value: [2.0, 3.0, 1.0], hideinGui: true},
-  point2: {type: "3fv", value: [1.0, 18.0, 3.0], hideinGui: true},
+  point2: {type: "3fv", value: [1.0, 80.0, 3.0], hideinGui: true},
 
-  offsetDistance: {type: "f", value: 5.0},
+  offsetDistance: {type: "f", value: 8.0},
 
   dotSize: {type: "f", value: 0.5},
-  lineWeight: {type: "f", value: 0.01},
+  lineWeight: {type: "f", value: 0.02},
 
   colorFadeCenter: {type: "f", value: 0.6, min: 0.0, max: 1.0, step: 0.001},
   colorFadeWidth: {type: "f", value: 0.4, min: 0.0, max: 1.0, step: 0.001},
@@ -64,13 +70,7 @@ const uniforms = {
 
   pointsFadeInner: {type: "3fv", value: [0.5, 0.5, 5.0001]},
   pointsFadeOuter: {type: "3fv", value: [0.5, 0.5, 5.0001]},
-  linesFade: {type: "3fv", value: [0.5, 0.5, 5.0001]},
-
-  colorGroup0A: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
-  colorGroup0B: {type: "3fv", value: [0.8, 0.8, 0.8], color: true},
-
-  colorGroup1A: {type: "3fv", value: [0.4, 0.4, 0.4], color: true},
-  colorGroup1B: {type: "3fv", value: [0.2, 0.2, 0.2], color: true},
+  linesFade: {type: "3fv", value: [0.5, 0.5, 5.0001]}
 };
 
 main();
@@ -101,7 +101,7 @@ function setup() {
   camera.position.y = -10.0;
   camera.position.z = 0.0;
   //-3.0, -18.0, 0.0
-  camera.lookAt ( 1.0, 18.0, 3.0 );
+  camera.lookAt ( 1.0, 0.0, 3.0 );
 
   const geometry = getInstancedDotGeometry(20, 0.2, numSteps);
 
