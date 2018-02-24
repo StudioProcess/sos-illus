@@ -42,7 +42,7 @@ const uniforms = {
 
   phase: {type: "fv1", value: [0.0, 0.5], hideinGui: true},
 
-  phaseLength: {type: "f", value: 8.0},
+  phaseLength: {type: "f", value: 20.0},
 
   point0: {type: "3fv", value: [-3.0, -18.0, 0.0, -3.0, -18.0, 0.0], hideinGui: true},
   point1: {type: "3fv", value: [2.0, 3.0, 1.0, 2.0, 3.0, 1.0], hideinGui: true},
