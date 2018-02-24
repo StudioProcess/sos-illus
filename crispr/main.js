@@ -127,7 +127,7 @@ function setup() {
   background.frustumCulled = false;
   scene.add(background);
 
-  const geometry = getInstancedDotGeometry(20, 0.2, numSteps);
+  const geometry = getInstancedDotGeometry(40, 0.2, numSteps);
   const linesGeometry = getInstancedLineGeometry(1.0, numSteps);
 
   for (let i = 0; i < 2; i++) {
