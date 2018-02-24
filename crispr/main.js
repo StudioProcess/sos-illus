@@ -9,16 +9,16 @@ import fullscreenVS from "../shaders/fullscreenVS.js";
 import backgroundFS from "../shaders/backgroundFS.js";
 
 const W = 1280;
-const H = 720;
+const H = 800;
 
 let RENDERING = false;
 let TILES = 2;
 
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
+let frameRequestId;
 
 const clock = new THREE.Clock();
-
 
 const numSteps = 60;
 
@@ -76,24 +76,24 @@ const uniforms = {
 main();
 function main() {
   setup(); // set up scene
-  
+
   loop(); // start game loop
-  
+
   tilesaver.init(renderer, scene, camera, TILES);
   initGui(uniforms);
 }
 
 
 function setup() {
-  
+
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     // alpha: true
   });
   renderer.setSize( W, H );
-  // renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setPixelRatio( window.devicePixelRatio );
   document.body.appendChild( renderer.domElement );
-  
+
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 75, W / H, 0.01, 1000 );
   controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -155,15 +155,15 @@ function setup() {
   lines.frustumCulled = false;
   scene.add(lines);
 
-  onResize();
-  window.addEventListener("resize", onResize);
+  // onResize();
+  // window.addEventListener("resize", onResize);
 
   clock.start();
 }
 
 function onResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
-  
+
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 }
@@ -218,7 +218,8 @@ function loop(time) { // eslint-disable-line no-unused-vars
     setFadeTimings(uniforms.phase.value, uniforms.linesFade.value, uniforms.linesTiming.value);
 
     uniforms.time.value += delta;
-    requestAnimationFrame(loop);
+    cancelAnimationFrame(frameRequestId);
+    frameRequestId = requestAnimationFrame(loop);
   }
 
   renderer.render( scene, camera );
@@ -241,7 +242,7 @@ document.addEventListener('keydown', e => {
       document.querySelector('body').webkitRequestFullscreen();
     } else { document.webkitExitFullscreen(); }
   }
-  
+
   else if (e.key == 'c') {
     capture.startstop(); // start/stop recording
   }

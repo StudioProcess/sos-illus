@@ -37,8 +37,8 @@ const uniforms = {
   aspectRatio: {type: "f", value: W / H, hideinGui: true},
   computeResolution: {type: "2fv", value: [1.0 / renderResolutionX, 1.0 / renderResolutionY], hideinGui: true},
 
-  backgroundColor: {type: "3fv", value: [0.0, 0.0, 0.0], color: true},
-  lineColor: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
+  backgroundColor: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
+  lineColor: {type: "3fv", value: [1.0, 0.24, 0.24], color: true},
 
   extends: {type: "2fv", value: [40.0, 40.0], min: 0.0, max: 100.0, step: 1.0001},
 

@@ -12,7 +12,7 @@ import fullscreenVS from "../shaders/fullscreenVS.js";
 import backgroundFS from "../shaders/backgroundFS.js";
 
 const W = 1280;
-const H = 720;
+const H = 800;
 
 let RENDERING = false;
 let TILES = 3;
@@ -25,6 +25,8 @@ const clock = new THREE.Clock();
 let gui;
 
 // const numDots = Math.floor(lineSubdivisions / 6);
+
+let frameRequestId;
 
 const planetPositions = [
   {x: -6.7, y: -5.0, z: 0.0}, // {x: -8.3, y: 0.0, z: 0.0}
@@ -39,11 +41,11 @@ const uniforms = {
   backgroundColor: {type: "3fv", value: [0.03, 0.02, 0.06], color: true},
 
   // red-ish
-  outerColor0: {type: "3fv", value: [0.03, 0.2, 0.65], color: true}, // value: [0.03, 0.2, 0.65]
-  outerColor1: {type: "3fv", value: [0.63, 0.79, 0.99], color: true}, // value: [0.63, 0.79, 0.99]
-
-  innerColor0: {type: "3fv", value: [0.99, 0.27, 0.12], color: true}, // value: [0.99, 0.27, 0.12]
-  innerColor1: {type: "3fv", value: [0.91, 0.76, 0.63], color: true}, // value: [0.91, 0.76, 0.63]
+  // outerColor0: {type: "3fv", value: [0.03, 0.2, 0.65], color: true}, // value: [0.03, 0.2, 0.65]
+  // outerColor1: {type: "3fv", value: [0.63, 0.79, 0.99], color: true}, // value: [0.63, 0.79, 0.99]
+  //
+  // innerColor0: {type: "3fv", value: [0.99, 0.27, 0.12], color: true}, // value: [0.99, 0.27, 0.12]
+  // innerColor1: {type: "3fv", value: [0.91, 0.76, 0.63], color: true}, // value: [0.91, 0.76, 0.63]
 
   // blue-green-ish
   // outerColor0: {type: "3fv", value: [0.71, 0.71, 0.74], color: true},
@@ -51,6 +53,13 @@ const uniforms = {
   //
   // innerColor0: {type: "3fv", value: [0.14, 0.19, 0.13], color: true},
   // innerColor1: {type: "3fv", value: [0.07, 0.09, 0.26], color: true},
+
+  // ice planet
+  outerColor0: {type: "3fv", value: [0.0, 0.05, 0.19], color: true},
+  outerColor1: {type: "3fv", value: [0.63, 0.79, 0.99], color: true},
+
+  innerColor0: {type: "3fv", value: [0.46, 0.44, 0.52], color: true}, // value: [0.99, 0.27, 0.12]
+  innerColor1: {type: "3fv", value: [0.13, 0.13, 0.22], color: true}, // value: [0.91, 0.76, 0.63]
 
   radius: {type: "f", value: 7.5, step: 0.1},
   displacementDistance: {type: "f", value: 0.19, step: 0.01}, // 1.4 , 0.01
@@ -205,7 +214,8 @@ function loop(time) { // eslint-disable-line no-unused-vars
   }
 
   if (!RENDERING) {
-    requestAnimationFrame(loop);
+    cancelAnimationFrame(frameRequestId);
+    frameRequestId = requestAnimationFrame(loop);
   }
   renderer.render( scene, camera );
   capture.update( renderer );
