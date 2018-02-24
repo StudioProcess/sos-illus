@@ -36,18 +36,18 @@ const uniforms = {
   colorGroup1B: {type: "3fv", value: [0.04, 0.0, 0.32], color: true},
 
   point0Center: {type: "3fv", value: [-3.0, -18.0, 0.0]},
-  point0Range: {type: "f", value: 0.0},
+  point0Range: {type: "f", value: 4.0},
   point1Center: {type: "3fv", value: [2.0, 3.0, 1.0]},
-  point1Range: {type: "f", value: 0.0},
+  point1Range: {type: "f", value: 4.0},
   point2Center: {type: "3fv", value: [1.0, 80.0, 3.0]},
-  point2Range: {type: "f", value: 0.0},
+  point2Range: {type: "f", value: 4.0},
 
   phase: {type: "f", value: 4.0, hideinGui: true},
-  phaseLength: {type: "f", value: 20.0},
+  phaseLength: {type: "f", value: 8.0},
 
-  point0: {type: "3fv", value: [-3.0, -18.0, 0.0], hideinGui: true},
-  point1: {type: "3fv", value: [2.0, 3.0, 1.0], hideinGui: true},
-  point2: {type: "3fv", value: [1.0, 80.0, 3.0], hideinGui: true},
+  point0: {type: "3fv", value: [-3.0, -18.0, 0.0, -3.0, -18.0, 0.0], hideinGui: true},
+  point1: {type: "3fv", value: [2.0, 3.0, 1.0, 2.0, 3.0, 1.0], hideinGui: true},
+  point2: {type: "3fv", value: [1.0, 80.0, 3.0, 1.0, 80.0, 3.0], hideinGui: true},
 
   offsetDistance: {type: "f", value: 8.0},
 
@@ -103,8 +103,7 @@ function setup() {
   //-3.0, -18.0, 0.0
   camera.lookAt ( 1.0, 0.0, 3.0 );
 
-  const geometry = getInstancedDotGeometry(20, 0.2, numSteps);
-
+  
   const background = new THREE.Mesh(
     new THREE.PlaneBufferGeometry(2.0, 2.0),
     new THREE.RawShaderMaterial({
@@ -119,45 +118,57 @@ function setup() {
   background.frustumCulled = false;
   scene.add(background);
 
-  const centerDots = new THREE.Mesh(
-    geometry,
-    new THREE.RawShaderMaterial({
-      vertexShader: crispr_dotVS,
-      fragmentShader: crispr_dotFS,
-      uniforms,
-      // wireframe: true
-    })
-  );
-  centerDots.frustumCulled = false;
-  scene.add(centerDots);
+  const geometry = getInstancedDotGeometry(20, 0.2, numSteps);
+  const linesGeometry = getInstancedLineGeometry(1.0, numSteps);
 
-  const offsetDots = new THREE.Mesh(
-    geometry,
-    new THREE.RawShaderMaterial({
-      vertexShader: crispr_dotVS,
-      fragmentShader: crispr_dotFS,
-      uniforms,
-      defines: {
-        OFFSET_DOT: true
-      }
-      // wireframe: true
-    })
-  );
-  offsetDots.frustumCulled = false;
-  scene.add(offsetDots);
+  for (let i = 0; i < 2; i++) {
+    const centerDots = new THREE.Mesh(
+      geometry,
+      new THREE.RawShaderMaterial({
+        vertexShader: crispr_dotVS,
+        fragmentShader: crispr_dotFS,
+        uniforms,
+        defines: {
+          INDEX: i
+        }
+        // wireframe: true
+      })
+    );
+    centerDots.frustumCulled = false;
+    scene.add(centerDots);
 
-  const lines = new THREE.Mesh(
-    getInstancedLineGeometry(1.0, numSteps),
-    new THREE.RawShaderMaterial({
-      vertexShader: crispr_lineVS,
-      fragmentShader: crispr_dotFS,
-      uniforms,
-      side: THREE.DoubleSide,
-      // wireframe: true
-    })
-  );
-  lines.frustumCulled = false;
-  scene.add(lines);
+    const offsetDots = new THREE.Mesh(
+      geometry,
+      new THREE.RawShaderMaterial({
+        vertexShader: crispr_dotVS,
+        fragmentShader: crispr_dotFS,
+        uniforms,
+        defines: {
+          OFFSET_DOT: true,
+          INDEX: i
+        }
+        // wireframe: true
+      })
+    );
+    offsetDots.frustumCulled = false;
+    scene.add(offsetDots);
+
+    const lines = new THREE.Mesh(
+      linesGeometry,
+      new THREE.RawShaderMaterial({
+        vertexShader: crispr_lineVS,
+        fragmentShader: crispr_dotFS,
+        uniforms,
+        side: THREE.DoubleSide,
+        defines: {
+          INDEX: i
+        }
+        // wireframe: true
+      })
+    );
+    lines.frustumCulled = false;
+    scene.add(lines);
+  }
 
   // onResize();
   // window.addEventListener("resize", onResize);
@@ -175,17 +186,24 @@ function onResize() {
 function setRandomV3Array(
   center,
   range,
-  target
+  target,
+  index
 ) {
+  const baseOffset = index * 3;
+
   for (let i = 0; i < 3; i++) {
-    target.value[i] = center.value[i] + 2.0 * (Math.random() - 0.5) * range.value;
+    target.value[baseOffset + i] = center.value[i] + 2.0 * (Math.random() - 0.5) * range.value;
   }
 }
 
 function onPhaseStep() {
-  setRandomV3Array(uniforms.point0Center, uniforms.point0Range, uniforms.point0);
-  setRandomV3Array(uniforms.point1Center, uniforms.point1Range, uniforms.point1);
-  setRandomV3Array(uniforms.point2Center, uniforms.point2Range, uniforms.point2);
+  setRandomV3Array(uniforms.point0Center, uniforms.point0Range, uniforms.point0, 0);
+  setRandomV3Array(uniforms.point1Center, uniforms.point1Range, uniforms.point1, 0);
+  setRandomV3Array(uniforms.point2Center, uniforms.point2Range, uniforms.point2, 0);
+
+  setRandomV3Array(uniforms.point0Center, uniforms.point0Range, uniforms.point0, 1);
+  setRandomV3Array(uniforms.point1Center, uniforms.point1Range, uniforms.point1, 1);
+  setRandomV3Array(uniforms.point2Center, uniforms.point2Range, uniforms.point2, 1);
 
   uniforms.time.value = 999.9 * (Math.random() - 0.5);
 }

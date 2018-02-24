@@ -9,9 +9,9 @@ uniform float time;
 uniform vec3 pointsFadeInner;
 uniform vec3 pointsFadeOuter;
 
-uniform vec3 point0;
-uniform vec3 point1;
-uniform vec3 point2;
+uniform vec3 point0[2];
+uniform vec3 point1[2];
+uniform vec3 point2[2];
 
 uniform float noiseOffset;
 uniform float noiseScale;
@@ -216,9 +216,9 @@ vec3 noisePos(vec3 position, float index) {
 
 void main()	{
   
-  vec3 noisedPoint0 = noisePos(point0, 1.0);
-  vec3 noisedPoint1 = noisePos(point1, 3.0);
-  vec3 noisedPoint2 = noisePos(point2, 7.0);
+  vec3 noisedPoint0 = noisePos(point0[INDEX], 1.0);
+  vec3 noisedPoint1 = noisePos(point1[INDEX], 3.0);
+  vec3 noisedPoint2 = noisePos(point2[INDEX], 7.0);
 
   vec4 transformed = vec4(1.0);
   transformed.xyz = Spline(
