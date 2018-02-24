@@ -22,8 +22,6 @@ const clock = new THREE.Clock();
 
 const numSteps = 40;
 
-let phaseCounter = 0.0;
-
 const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
 
@@ -42,7 +40,8 @@ const uniforms = {
   point2Center: {type: "3fv", value: [1.0, 80.0, 3.0]},
   point2Range: {type: "f", value: 4.0},
 
-  phase: {type: "f", value: 4.0, hideinGui: true},
+  phase: {type: "fv1", value: [0.0, 0.5], hideinGui: true},
+
   phaseLength: {type: "f", value: 8.0},
 
   point0: {type: "3fv", value: [-3.0, -18.0, 0.0, -3.0, -18.0, 0.0], hideinGui: true},
@@ -68,10 +67,16 @@ const uniforms = {
   pointsOuterTiming: {type: "4fv", value: [0.15, 0.35, 0.7, 0.95], min: 0.0, max: 1.0, step: 0.001},
   linesTiming: {type: "4fv", value: [0.3, 0.45, 0.6, 0.75], min: 0.0, max: 1.0, step: 0.001},
 
-  pointsFadeInner: {type: "3fv", value: [0.5, 0.5, 5.0001]},
-  pointsFadeOuter: {type: "3fv", value: [0.5, 0.5, 5.0001]},
-  linesFade: {type: "3fv", value: [0.5, 0.5, 5.0001]}
+  pointsFadeInner: {type: "2fv", value: [0.5, 5.0001]},
+  pointsFadeOuter: {type: "2fv", value: [0.5, 5.0001]},
+  linesFade: {type: "2fv", value: [0.5, 5.0001]},
+
+  pointsFadePosInner: {type: "fv1", value: [0.5, 0.5]},
+  pointsFadePosOuter: {type: "fv1", value: [0.5, 0.5]},
+  linesFadePos: {type: "fv1", value: [0.5, 0.5]}
 };
+
+const phaseCounters = [0.0,uniforms.phaseLength.value * 0.5];
 
 main();
 function main() {
@@ -85,6 +90,10 @@ function main() {
 
 
 function setup() {
+
+  for (let i = 0; i < 2; i++) {
+    onPhaseStep(i);
+  }
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -196,29 +205,23 @@ function setRandomV3Array(
   }
 }
 
-function onPhaseStep() {
-  setRandomV3Array(uniforms.point0Center, uniforms.point0Range, uniforms.point0, 0);
-  setRandomV3Array(uniforms.point1Center, uniforms.point1Range, uniforms.point1, 0);
-  setRandomV3Array(uniforms.point2Center, uniforms.point2Range, uniforms.point2, 0);
-
-  setRandomV3Array(uniforms.point0Center, uniforms.point0Range, uniforms.point0, 1);
-  setRandomV3Array(uniforms.point1Center, uniforms.point1Range, uniforms.point1, 1);
-  setRandomV3Array(uniforms.point2Center, uniforms.point2Range, uniforms.point2, 1);
-
-  uniforms.time.value = 999.9 * (Math.random() - 0.5);
+function onPhaseStep(index) {
+  setRandomV3Array(uniforms.point0Center, uniforms.point0Range, uniforms.point0, index);
+  setRandomV3Array(uniforms.point1Center, uniforms.point1Range, uniforms.point1, index);
+  setRandomV3Array(uniforms.point2Center, uniforms.point2Range, uniforms.point2, index);
 }
 
-function setFadeTimings(phase, fade, timings) {
+function getFadeTimings(phase, fade, timings) {
   let value = inverseLerpClamped(timings[0], timings[1], phase) * 0.5;
   value += inverseLerpClamped(timings[2], timings[3], phase) * 0.5;
 
   value = lerp(
-    -fade[1],
-    1.0 + fade[1],
+    -fade[0],
+    1.0 + fade[0],
     value
   );
 
-  fade[0] = value;
+  return value;
 }
 
 function loop(time) { // eslint-disable-line no-unused-vars
@@ -227,17 +230,19 @@ function loop(time) { // eslint-disable-line no-unused-vars
   const delta = 1.0 / 30.0;
 
   if (!RENDERING) {
-    phaseCounter += delta;
+    for (let i = 0, l = phaseCounters.length; i < l; i++) {
+      phaseCounters[i] += delta;
 
-    if (phaseCounter > uniforms.phaseLength.value) {
-      phaseCounter = 0.0;
-      onPhaseStep();
+      if (phaseCounters[i] > uniforms.phaseLength.value) {
+        phaseCounters[i] = 0.0;
+        onPhaseStep(i);
+      }
+
+      uniforms.phase.value[i] = phaseCounters[i] / uniforms.phaseLength.value;
+      uniforms.pointsFadePosInner.value[i] = getFadeTimings(uniforms.phase.value[i], uniforms.pointsFadeInner.value, uniforms.pointsInnerTiming.value);
+      uniforms.pointsFadePosOuter.value[i] = getFadeTimings(uniforms.phase.value[i], uniforms.pointsFadeOuter.value, uniforms.pointsOuterTiming.value);
+      uniforms.linesFadePos.value[i] = getFadeTimings(uniforms.phase.value[i], uniforms.linesFade.value, uniforms.linesTiming.value);
     }
-
-    uniforms.phase.value = phaseCounter / uniforms.phaseLength.value;
-    setFadeTimings(uniforms.phase.value, uniforms.pointsFadeInner.value, uniforms.pointsInnerTiming.value);
-    setFadeTimings(uniforms.phase.value, uniforms.pointsFadeOuter.value, uniforms.pointsOuterTiming.value);
-    setFadeTimings(uniforms.phase.value, uniforms.linesFade.value, uniforms.linesTiming.value);
 
     uniforms.time.value += delta;
     cancelAnimationFrame(frameRequestId);

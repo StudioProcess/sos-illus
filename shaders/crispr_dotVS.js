@@ -6,8 +6,11 @@ uniform mat4 projectionMatrix;
 
 uniform float time;
 
-uniform vec3 pointsFadeInner;
-uniform vec3 pointsFadeOuter;
+uniform vec2 pointsFadeInner;
+uniform vec2 pointsFadeOuter;
+
+uniform float pointsFadePosInner[2];
+uniform float pointsFadePosOuter[2];
 
 uniform vec3 point0[2];
 uniform vec3 point1[2];
@@ -228,10 +231,10 @@ void main()	{
     normId
   );
 
-  float fadeScaler = pointsFadeInner.z * cubicPulse(pointsFadeInner.x, pointsFadeInner.y, normId);
+  float fadeScaler = pointsFadeInner.y * cubicPulse(pointsFadePosInner[INDEX], pointsFadeInner.x, normId);
 
   #if defined( OFFSET_DOT )
-  fadeScaler = pointsFadeOuter.z * cubicPulse(pointsFadeOuter.x, pointsFadeOuter.y, normId);
+  fadeScaler = pointsFadeOuter.y * cubicPulse(pointsFadePosOuter[INDEX], pointsFadeOuter.x, normId);
 
   vec3 forwardV = Spline(
     noisedPoint0,

@@ -14,7 +14,8 @@ uniform float noiseOffset;
 uniform float noiseScale;
 uniform float noiseSpeed;
 
-uniform vec3 linesFade;
+uniform vec2 linesFade;
+uniform float linesFadePos[2];
 
 uniform float offsetDistance;
 
@@ -265,7 +266,7 @@ void main()	{
     position.z
   );
 
-  float fadeScaler = linesFade.z * cubicPulse(linesFade.x, linesFade.y, normId);
+  float fadeScaler = linesFade.y * cubicPulse(linesFadePos[INDEX], linesFade.x, normId);
   fadeScaler = clamp(fadeScaler, 0.0, 1.0);
 
   transformed.xy += (position.x * lineWeight * fadeScaler) * extrudeV;
