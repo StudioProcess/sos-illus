@@ -20,7 +20,7 @@ let frameRequestId;
 
 const clock = new THREE.Clock();
 
-const numSteps = 60;
+const numSteps = 40;
 
 let phaseCounter = 0.0;
 
@@ -28,14 +28,14 @@ const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
 
   point0Center: {type: "3fv", value: [-3.0, -18.0, 0.0]},
-  point0Range: {type: "f", value: 8.0},
+  point0Range: {type: "f", value: 0.0},
   point1Center: {type: "3fv", value: [2.0, 3.0, 1.0]},
-  point1Range: {type: "f", value: 8.0},
+  point1Range: {type: "f", value: 0.0},
   point2Center: {type: "3fv", value: [1.0, 18.0, 3.0]},
-  point2Range: {type: "f", value: 8.0},
+  point2Range: {type: "f", value: 0.0},
 
   phase: {type: "f", value: 4.0, hideinGui: true},
-  phaseLength: {type: "f", value: 12.0},
+  phaseLength: {type: "f", value: 20.0},
 
   backgroundColor: {type: "3fv", value: [0.0, 0.0, 0.0], color: true},
 
@@ -43,20 +43,20 @@ const uniforms = {
   point1: {type: "3fv", value: [2.0, 3.0, 1.0], hideinGui: true},
   point2: {type: "3fv", value: [1.0, 18.0, 3.0], hideinGui: true},
 
-  offsetDistance: {type: "f", value: 3.4},
+  offsetDistance: {type: "f", value: 5.0},
 
-  dotSize: {type: "f", value: 1.0},
-  lineWeight: {type: "f", value: 0.02},
+  dotSize: {type: "f", value: 0.5},
+  lineWeight: {type: "f", value: 0.01},
 
   colorFadeCenter: {type: "f", value: 0.6, min: 0.0, max: 1.0, step: 0.001},
   colorFadeWidth: {type: "f", value: 0.4, min: 0.0, max: 1.0, step: 0.001},
 
   windings: {type: "f", value: 3.0},
-  rotationSpeed: {type: "f", value: 1.0},
+  rotationSpeed: {type: "f", value: 0.2},
 
   noiseOffset: {type: "f", value: 3.0},
-  noiseScale: {type: "f", value: 0.108},
-  noiseSpeed: {type: "f", value: 0.1},
+  noiseScale: {type: "f", value: 0.05},
+  noiseSpeed: {type: "f", value: 0.01},
 
   pointsInnerTiming: {type: "4fv", value: [0.0, 0.2, 0.65, 0.8], min: 0.0, max: 1.0, step: 0.001},
   pointsOuterTiming: {type: "4fv", value: [0.15, 0.35, 0.7, 0.95], min: 0.0, max: 1.0, step: 0.001},
@@ -97,7 +97,11 @@ function setup() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 75, W / H, 0.01, 1000 );
   controls = new THREE.OrbitControls( camera, renderer.domElement );
-  camera.position.z = 20;
+  camera.position.x = -3.0;
+  camera.position.y = -10.0;
+  camera.position.z = 0.0;
+  //-3.0, -18.0, 0.0
+  camera.lookAt ( 1.0, 18.0, 3.0 );
 
   const geometry = getInstancedDotGeometry(20, 0.2, numSteps);
 
