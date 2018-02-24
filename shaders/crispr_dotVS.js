@@ -241,8 +241,8 @@ void main()	{
   );
 
   forwardV = normalize(transformed.xyz - forwardV);
-  vec3 offsetU = normalize(cross(forwardV, vec3(0.0, 1.0, 0.0)));
-  vec3 offsetV = normalize(cross(forwardV, offsetU));
+  vec3 offsetV = normalize(cross(forwardV, normalize(cross(forwardV, vec3(1.0, 0.0, 0.0)))));
+  vec3 offsetU = normalize(cross(forwardV, offsetV));
 
   float angle = rotationSpeed * time + normId * windings;
 
