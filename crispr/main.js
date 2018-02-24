@@ -3,6 +3,8 @@ import * as capture from '../vendor/capture.js';
 import * as tilesaver from '../app/tilesaver.js';
 import {initGui} from "../shared/generateGui.js";
 
+import {inverseLerpClamped, lerp} from "../shared/mathUtils.js";
+
 import fullscreenVS from "../shaders/fullscreenVS.js";
 import backgroundFS from "../shaders/backgroundFS.js";
 
@@ -20,14 +22,26 @@ const clock = new THREE.Clock();
 
 const numSteps = 60;
 
+let phaseCounter = 0.0;
+
 const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
 
+  point0Center: {type: "3fv", value: [-3.0, -18.0, 0.0]},
+  point0Range: {type: "f", value: 8.0},
+  point1Center: {type: "3fv", value: [2.0, 3.0, 1.0]},
+  point1Range: {type: "f", value: 8.0},
+  point2Center: {type: "3fv", value: [1.0, 18.0, 3.0]},
+  point2Range: {type: "f", value: 8.0},
+
+  phase: {type: "f", value: 4.0, hideinGui: true},
+  phaseLength: {type: "f", value: 12.0},
+
   backgroundColor: {type: "3fv", value: [0.0, 0.0, 0.0], color: true},
 
-  point0: {type: "3fv", value: [-3.0, -18.0, 0.0]},
-  point1: {type: "3fv", value: [2.0, 3.0, 1.0]},
-  point2: {type: "3fv", value: [1.0, 18.0, 3.0]},
+  point0: {type: "3fv", value: [-3.0, -18.0, 0.0], hideinGui: true},
+  point1: {type: "3fv", value: [2.0, 3.0, 1.0], hideinGui: true},
+  point2: {type: "3fv", value: [1.0, 18.0, 3.0], hideinGui: true},
 
   offsetDistance: {type: "f", value: 3.4},
 
@@ -40,13 +54,16 @@ const uniforms = {
   windings: {type: "f", value: 3.0},
   rotationSpeed: {type: "f", value: 1.0},
 
-  noiseOffset: {type: "f", value: 1.0},
-  noiseScale: {type: "f", value: 0.1},
+  noiseOffset: {type: "f", value: 3.0},
+  noiseScale: {type: "f", value: 0.108},
   noiseSpeed: {type: "f", value: 0.1},
+
+  pointsInnerTiming: {type: "4fv", value: [0.0, 0.2, 0.45, 0.7], min: 0.0, max: 1.0, step: 0.001},
+  pointsOuterTiming: {type: "4fv", value: [0.15, 0.35, 0.5, 0.9], min: 0.0, max: 1.0, step: 0.001},
+  linesTiming: {type: "4fv", value: [0.2, 0.5, 0.6, 0.7], min: 0.0, max: 1.0, step: 0.001},
 
   pointsFadeInner: {type: "3fv", value: [0.5, 0.5, 5.0001]},
   pointsFadeOuter: {type: "3fv", value: [0.5, 0.5, 5.0001]},
-
   linesFade: {type: "3fv", value: [0.5, 0.5, 5.0001]},
 
   colorGroup0A: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
@@ -151,12 +168,55 @@ function onResize() {
   camera.updateProjectionMatrix();
 }
 
+function setRandomV3Array(
+  center,
+  range,
+  target
+) {
+  for (let i = 0; i < 3; i++) {
+    target.value[i] = center.value[i] + 2.0 * (Math.random() - 0.5) * range.value;
+  }
+}
+
+function onPhaseStep() {
+  setRandomV3Array(uniforms.point0Center, uniforms.point0Range, uniforms.point0);
+  setRandomV3Array(uniforms.point1Center, uniforms.point1Range, uniforms.point1);
+  setRandomV3Array(uniforms.point2Center, uniforms.point2Range, uniforms.point2);
+
+  uniforms.time.value = 999.9 * (Math.random() - 0.5);
+}
+
+function setFadeTimings(phase, fade, timings) {
+  let value = inverseLerpClamped(timings[0], timings[1], phase) * 0.5;
+  value += inverseLerpClamped(timings[2], timings[3], phase) * 0.5;
+
+  value = lerp(
+    -fade[1],
+    1.0 + fade[1],
+    value
+  );
+
+  fade[0] = value;
+}
 
 function loop(time) { // eslint-disable-line no-unused-vars
 
-  const delta = Math.min(1.0 / 20.0, clock.getDelta());
+  // const delta = Math.min(1.0 / 20.0, clock.getDelta());
+  const delta = 1.0 / 30.0;
 
   if (!RENDERING) {
+    phaseCounter += delta;
+
+    if (phaseCounter > uniforms.phaseLength.value) {
+      phaseCounter = 0.0;
+      onPhaseStep();
+    }
+
+    uniforms.phase.value = phaseCounter / uniforms.phaseLength.value;
+    setFadeTimings(uniforms.phase.value, uniforms.pointsFadeInner.value, uniforms.pointsInnerTiming.value);
+    setFadeTimings(uniforms.phase.value, uniforms.pointsFadeOuter.value, uniforms.pointsOuterTiming.value);
+    setFadeTimings(uniforms.phase.value, uniforms.linesFade.value, uniforms.linesTiming.value);
+
     uniforms.time.value += delta;
     requestAnimationFrame(loop);
   }
