@@ -58,9 +58,9 @@ const uniforms = {
   noiseScale: {type: "f", value: 0.108},
   noiseSpeed: {type: "f", value: 0.1},
 
-  pointsInnerTiming: {type: "4fv", value: [0.0, 0.2, 0.45, 0.7], min: 0.0, max: 1.0, step: 0.001},
-  pointsOuterTiming: {type: "4fv", value: [0.15, 0.35, 0.5, 0.9], min: 0.0, max: 1.0, step: 0.001},
-  linesTiming: {type: "4fv", value: [0.2, 0.5, 0.6, 0.7], min: 0.0, max: 1.0, step: 0.001},
+  pointsInnerTiming: {type: "4fv", value: [0.0, 0.2, 0.65, 0.8], min: 0.0, max: 1.0, step: 0.001},
+  pointsOuterTiming: {type: "4fv", value: [0.15, 0.35, 0.7, 0.95], min: 0.0, max: 1.0, step: 0.001},
+  linesTiming: {type: "4fv", value: [0.3, 0.45, 0.6, 0.75], min: 0.0, max: 1.0, step: 0.001},
 
   pointsFadeInner: {type: "3fv", value: [0.5, 0.5, 5.0001]},
   pointsFadeOuter: {type: "3fv", value: [0.5, 0.5, 5.0001]},
