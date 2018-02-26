@@ -38,23 +38,48 @@ const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
   aspectRatio: {type: "f", value: W / H, hideinGui: true},
 
+  // Kleine Eisschollen
   backgroundColor: {type: "3fv", value: [0.03, 0.02, 0.06], color: true},
 
-  // red-ish
-  // outerColor0: {type: "3fv", value: [0.03, 0.2, 0.65], color: true}, // value: [0.03, 0.2, 0.65]
-  // outerColor1: {type: "3fv", value: [0.63, 0.79, 0.99], color: true}, // value: [0.63, 0.79, 0.99]
-  //
-  // innerColor0: {type: "3fv", value: [0.99, 0.27, 0.12], color: true}, // value: [0.99, 0.27, 0.12]
-  // innerColor1: {type: "3fv", value: [0.91, 0.76, 0.63], color: true}, // value: [0.91, 0.76, 0.63]
+  outerColor0: {type: "3fv", value: [0.0, 0.05, 0.19], color: true},
+  outerColor1: {type: "3fv", value: [0.63, 0.79, 0.99], color: true},
 
-  // blue-green-ish
-  // outerColor0: {type: "3fv", value: [0.71, 0.71, 0.74], color: true},
-  // outerColor1: {type: "3fv", value: [0.46, 0.7, 1.0], color: true},
-  //
-  // innerColor0: {type: "3fv", value: [0.14, 0.19, 0.13], color: true},
-  // innerColor1: {type: "3fv", value: [0.07, 0.09, 0.26], color: true},
+  innerColor0: {type: "3fv", value: [0.46, 0.44, 0.52], color: true}, // value: [0.99, 0.27, 0.12]
+  innerColor1: {type: "3fv", value: [0.13, 0.13, 0.22], color: true}, // value: [0.91, 0.76, 0.63]
 
-  // ice planet
+  radius: {type: "f", value: 7.5, step: 0.1},
+  displacementDistance: {type: "f", value: 0.09, step: 0.01}, // 1.4 , 0.01
+
+  innerRadius: {type: "f", value: 7.6, step: 0.1}, // 6.0, 0.1
+  innerDisplacementDistance: {type: "f", value: 0.14, step: 0.01}, // 0.8, 0.01
+
+  noiseSpeed: {type: "f", value: 0.098, step: 0.001}, // 0.1, 0.001
+  noiseScale: {type: "f", value: 100, step: 0.01}, // 2.0, 0.01
+  noiseMinValue: {type: "f", value: -0.09, min: -1.0, max: 1.0, step: 0.01}, // -0.2, -1.0, 1.0, 0.01
+
+  lineStepSize: {type: "f", value: 0.04, min: 0.0, step: 0.01}, // value: 0.1
+  lineWeight: {type: "f", value: 0.021, min: 0.0, step: 0.001}, // value: 0.008
+  lineSmoothing: {type: "f", value: 5.0, min: 0.0, step: 0.001},
+
+  facingCull: {type: "f", value: -0.4, min: -1.0, max: 1.0, step: 0.001}, // value: -0.7
+  facingCullWidth: {type: "f", value: 0.5, min: 0.0, step: 0.001},
+
+  outerOpacity:  {type: "f", value: 1.0, min: 0.0, max: 1.0, step: 0.001},
+  innerOpacity:  {type: "f", value: 0.15, min: 0.0, max: 1.0, step: 0.001},
+
+  rotationAxis: {type: "3fv", value: [0.4, 1.0, 0.0], min: -1.0, max: 1.0, step: 0.01},
+  rotationSpeed:  {type: "f", value: 1.2, min: -10.0, max: 10.0, step: 0.001},
+
+  minDistance: {type: "f", value: -50.0},
+  maxDistance: {type: "f", value: 200.0},
+
+  saturationValue: {type: "f", value: 0.25}, // 0.5
+  brightnessValue: {type: "f", value: 0.03}, // 0.3
+
+  /**
+  // ice glass planet
+  backgroundColor: {type: "3fv", value: [0.03, 0.02, 0.06], color: true},
+
   outerColor0: {type: "3fv", value: [0.0, 0.05, 0.19], color: true},
   outerColor1: {type: "3fv", value: [0.63, 0.79, 0.99], color: true},
 
@@ -89,6 +114,21 @@ const uniforms = {
 
   saturationValue: {type: "f", value: 0.25}, // 0.5
   brightnessValue: {type: "f", value: 0.03}, // 0.3
+  **/
+
+  // red-ish
+  // outerColor0: {type: "3fv", value: [0.03, 0.2, 0.65], color: true}, // value: [0.03, 0.2, 0.65]
+  // outerColor1: {type: "3fv", value: [0.63, 0.79, 0.99], color: true}, // value: [0.63, 0.79, 0.99]
+  //
+  // innerColor0: {type: "3fv", value: [0.99, 0.27, 0.12], color: true}, // value: [0.99, 0.27, 0.12]
+  // innerColor1: {type: "3fv", value: [0.91, 0.76, 0.63], color: true}, // value: [0.91, 0.76, 0.63]
+
+  // blue-green-ish
+  // outerColor0: {type: "3fv", value: [0.71, 0.71, 0.74], color: true},
+  // outerColor1: {type: "3fv", value: [0.46, 0.7, 1.0], color: true},
+  //
+  // innerColor0: {type: "3fv", value: [0.14, 0.19, 0.13], color: true},
+  // innerColor1: {type: "3fv", value: [0.07, 0.09, 0.26], color: true},
 };
 
 main();

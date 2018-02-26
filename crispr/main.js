@@ -112,7 +112,7 @@ function setup() {
   //-3.0, -18.0, 0.0
   camera.lookAt ( 1.0, 0.0, 3.0 );
 
-  
+
   const background = new THREE.Mesh(
     new THREE.PlaneBufferGeometry(2.0, 2.0),
     new THREE.RawShaderMaterial({
