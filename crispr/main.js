@@ -1,4 +1,4 @@
-import * as capture from '../vendor/capture.js';
+import * as capture from '../vendor/recorder.js';
 
 import * as tilesaver from '../app/tilesaver.js';
 import {initGui} from "../shared/generateGui.js";
@@ -19,6 +19,10 @@ let controls; // eslint-disable-line no-unused-vars
 let frameRequestId;
 
 const clock = new THREE.Clock();
+
+// *LOOPING*
+const loopPeriod = 5; // in seconds
+let loopValue = 0; // position inside the loop [0..1)
 
 const numSteps = 40;
 
@@ -224,8 +228,12 @@ function getFadeTimings(phase, fade, timings) {
   return value;
 }
 
-function loop(time) { // eslint-disable-line no-unused-vars
 
+
+function loop(time) { // eslint-disable-line no-unused-vars
+  loopValue = (time/1000 % loopPeriod) / loopPeriod; // *LOOPING*
+  // console.log(loopValue);
+  
   // const delta = Math.min(1.0 / 20.0, clock.getDelta());
   const delta = 1.0 / 30.0;
 
@@ -274,6 +282,6 @@ document.addEventListener('keydown', e => {
     capture.startstop(); // start/stop recording
   }
   else if (e.key == 'v') {
-    capture.startstop( {startTime:0, timeLimit:1} ); // record 1 second
+    capture.startstop( {start:0, duration:loopPeriod} ); // record 1 second
   }
 });
