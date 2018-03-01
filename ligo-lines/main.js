@@ -207,7 +207,7 @@ function loop(time) { // eslint-disable-line no-unused-vars
   // console.log(loopValue, uniforms.walzeRight.value);
 
   const delta = Math.min(1.0 / 20.0, clock.getDelta());
-  deltaCounter += delta;
+  deltaCounter += 1.0 / 30.0;
 
   if (!RENDERING) {
     if (deltaCounter > fixedFrameRate) {
