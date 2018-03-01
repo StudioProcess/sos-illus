@@ -10,6 +10,10 @@ let state = {
   currentFrame: 0, // current recording frame,
   recording: false,
   startRecording: false, // used to wait for one update() after recording was triggered
+  tarDownloadedSize: 0,
+  tarMaxSize: 0,
+  tarSequence: 0,
+  tarFilename: '',
 };
 
 let tape; // Tarball (i.e. Tape ARchive)
@@ -71,11 +75,12 @@ let default_options = {
   start: undefined,
   duration: undefined,
   framerate: 30,
+  chunk: 500,
 };
 
 export function start(options) {
-  console.log('rec: starting', options);
   options = Object.assign({}, default_options, options);
+  console.log('rec: starting', options);
   
   // frame rate and time
   state.frameRate = options.framerate;
@@ -97,6 +102,11 @@ export function start(options) {
   } else {
     state.totalFrames = Math.ceil(options.duration * state.frameRate);
   }
+  
+  state.tarMaxSize = options.chunk;
+  state.tarDownloadedSize = 0;
+  state.tarSequence = 0;
+  state.tarFilename = new Date().toISOString();
   
   hijackTimingFunctions();
   
@@ -138,6 +148,8 @@ export function update(renderer) {
     // check for end of recording
     if (state.totalFrames > 0 && state.currentFrame >= state.totalFrames) {
       stop();
+    } else if (tape.length / 1000000 >= state.tarMaxSize) {
+      saveTarball();
     }
   });
   
@@ -152,7 +164,7 @@ export function stop() {
   state.recording = false;
   
   if (tape) {
-    saveBlob( tape.save(), new Date().toISOString() + '.tar' );
+    saveTarball({last:true});
   }
   
   updateHUD();
@@ -174,6 +186,18 @@ export function now() {
   } else {
     return window.performance.now();
   }
+}
+
+function saveTarball(options = {last:false}) {
+  let seq;
+  if (options && options.last && state.tarSequence == 0) {
+    seq = '';
+  } else {
+    seq = '_' + ('' + state.tarSequence++).padStart(3, '0');
+  }
+  saveBlob( tape.save(), state.tarFilename + seq + '.tar');
+  state.tarDownloadedSize += tape.length;
+  tape = new Tarball();
 }
 
 
@@ -255,7 +279,7 @@ function updateHUD() {
   frames += state.totalFrames > 0 ? '/' + state.totalFrames : '';
   let clock = new Date(state.currentTime - state.startTime).toISOString().substr(14, 5);
   let intraSecondFrame = (state.currentFrame % state.frameRate + '').padStart(2, '0');
-  let dataAmount = dataAmountString(tape.length);
+  let dataAmount = dataAmountString(state.tarDownloadedSize + tape.length);
   // eslint-disable-next-line no-irregular-whitespace
   hud.textContent = `●REC ${clock}.${intraSecondFrame} #${frames} ${dataAmount}`; // shows number of COMPLETE frames
 }
@@ -268,7 +292,7 @@ function hideHUD(time = 0) {
 
 
 function dataAmountString(numBytes, mbDecimals = 1, gbDecimals = 2) {
-  let mb = numBytes / 1048576;
-  let gb = mb / 1024;
+  let mb = numBytes / 1000000;
+  let gb = mb / 1000;
   return gb < 1 ? mb.toFixed(mbDecimals) + ' MB': gb.toFixed(gbDecimals) + ' GB';
 }
