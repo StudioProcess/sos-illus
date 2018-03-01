@@ -1,4 +1,4 @@
-import * as capture from '../vendor/capture.js';
+import * as capture from '../vendor/recorder.js';
 
 
 
@@ -400,6 +400,6 @@ document.addEventListener('keydown', e => {
     capture.startstop(); // start/stop recording
   }
   else if (e.key == 'v') {
-    capture.startstop( { timeLimit:10 } ); // record 10 seconds
+    capture.startstop( { duration:10 } ); // record 10 seconds
   }
 });

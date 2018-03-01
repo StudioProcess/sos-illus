@@ -1,4 +1,4 @@
-import * as capture from '../vendor/capture.js';
+import * as capture from '../vendor/recorder.js';
 
 import * as tilesaver from '../app/tilesaver.js';
 import {initGui} from "../shared/generateGui.js";
@@ -193,6 +193,6 @@ document.addEventListener('keydown', e => {
     capture.startstop(); // start/stop recording
   }
   else if (e.key == 'v') {
-    capture.startstop( {startTime:0, timeLimit:1} ); // record 1 second
+    capture.startstop( {start:0, duration:1} ); // record 1 second
   }
 });
