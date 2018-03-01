@@ -12,6 +12,8 @@ import backgroundFS from "../shaders/backgroundFS.js";
 import ligoPlaneVS from "../shaders/ligoPlaneVS.js";
 import ligoPlaneFS from "../shaders/ligoPlaneFS.js";
 
+import {inverseLerpClamped} from "../shared/mathUtils.js";
+
 const W = 1280;
 const H = 800;
 
@@ -23,11 +25,16 @@ let controls; // eslint-disable-line no-unused-vars
 
 const clock = new THREE.Clock();
 
+// *LOOPING*
+const loopPeriod = 5; // in seconds
+let loopValue = 0; // position inside the loop [0..1)
+
 const heightPingPong = new PingPongRunner();
 
 const renderResolutionX = 1024;
 const renderResolutionY = 1024;
 const fixedFrameRate = 1.0 / 24.0;
+// const fixedFrameRate = 1.0 / 60.0;
 let deltaCounter = fixedFrameRate + 0.1;
 
 let frameRequest;
@@ -71,6 +78,13 @@ const uniforms = {
 
   colorEdge: {type: "f", value: 0.0,  min: -1.0, max: 1.0, step: 0.0001},
   colorEdgeWidth: {type: "f", value: 0.1}, min: -0.2, max: 0.2, step: 0.0001,
+
+  walzeLeft: {type: "f", value: 0.0, min: -0.5, max: 1.5, step: 0.0001, hideinGui: true},
+  walzeRight: {type: "f", value: 1.0, min: -0.5, max: 1.5, step: 0.0001, hideinGui: true},
+
+  walzeRelDuration: {type: "f", value: 0.1, min: 0.0, max: 1.0, step: 0.0001},
+
+  walzeWidth: {type: "f", value: 0.2, min: 0.0, max: 0.5, step: 0.0001},
 
   pointPositions: {
     type: "v3v",
@@ -184,6 +198,13 @@ function onResize() {
 
 
 function loop(time) { // eslint-disable-line no-unused-vars
+  loopValue = (time/1000 % loopPeriod) / loopPeriod; // *LOOPING*
+
+  uniforms.walzeRight.value = inverseLerpClamped(0.0, uniforms.walzeRelDuration.value, loopValue);
+  uniforms.walzeLeft.value = inverseLerpClamped(1.0 - uniforms.walzeRelDuration.value, 1.0, loopValue);
+
+  // console.log(loopValue, uniforms.walzeLeft.value, uniforms.walzeRight.value);
+  // console.log(loopValue, uniforms.walzeRight.value);
 
   const delta = Math.min(1.0 / 20.0, clock.getDelta());
   deltaCounter += delta;
@@ -252,6 +273,6 @@ document.addEventListener('keydown', e => {
     camera.aspectRatio = W/H;
     camera.updateProjectionMatrix();
 
-    capture.startstop( {start:0, duration:1} ); // record 1 second
+    capture.startstop( {start:0, duration:loopPeriod} ); // record 1 second
   }
 });

@@ -18,6 +18,10 @@ uniform vec2 uvScale;
 uniform float uvRotation;
 uniform vec2 uvTranslate;
 
+uniform float walzeLeft;
+uniform float walzeRight;
+uniform float walzeWidth;
+
 uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 
@@ -90,15 +94,21 @@ void main()	{
   vUV = getTransformedUV(vUV);
   nextUV = getTransformedUV(nextUV);
 
+  float heightMultiplier = smoothstep(walzeLeft, walzeLeft + walzeWidth, vUV.x);
+  heightMultiplier *= smoothstep(walzeRight, walzeRight - walzeWidth, vUV.x);
+
   float waveDataPrev = texture2D(pingPongOutMap, prevUV).r;
+  waveDataPrev *= heightMultiplier;
   vPositionPrev.z += displaceHeight * waveDataPrev * gain(abs(waveDataPrev), displaceGain);
   vPositionPrev = modelViewMatrix * vPositionPrev;
 
   float waveData = texture2D(pingPongOutMap, vUV).r;
+  waveData *= heightMultiplier;
   vPosition.z += displaceHeight * waveData * gain(abs(waveData), displaceGain);
   vPosition = modelViewMatrix * vPosition;
 
   float waveDataNext = texture2D(pingPongOutMap, nextUV).r;
+  waveDataNext *= heightMultiplier;
   vPositionNext.z += displaceHeight * waveDataNext * gain(abs(waveDataNext), displaceGain);
   vPositionNext = modelViewMatrix * vPositionNext;
 
