@@ -32,14 +32,23 @@ const numSteps = 90;
 const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
 
+  // red bg and taupe colors
+  backgroundColor: {type: "3fv", value: [1.0, 0.24, 0.24], color: true},
+
+  colorGroup0A: {type: "3fv", value: [0.9, 0.9, 0.9], color: true},
+  colorGroup0B: {type: "3fv", value: [0.82, 0.82, 0.82], color: true},
+
+  colorGroup1A: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
+  colorGroup1B: {type: "3fv", value: [0.85, 0.85, 0.85], color: true},
+
   // taupe color
-  backgroundColor: {type: "3fv", value: [1.0, 0.99, 0.95], color: true},
-
-  colorGroup0A: {type: "3fv", value: [0.2, 0.2, 0.2], color: true},
-  colorGroup0B: {type: "3fv", value: [0.9, 0.9, 0.9], color: true},
-
-  colorGroup1A: {type: "3fv", value: [0.8, 0.8, 0.8], color: true},
-  colorGroup1B: {type: "3fv", value: [0.04, 0.04, 0.04], color: true},
+  // backgroundColor: {type: "3fv", value: [1.0, 0.99, 0.95], color: true},
+  //
+  // colorGroup0A: {type: "3fv", value: [0.2, 0.2, 0.2], color: true},
+  // colorGroup0B: {type: "3fv", value: [0.9, 0.9, 0.9], color: true},
+  //
+  // colorGroup1A: {type: "3fv", value: [0.8, 0.8, 0.8], color: true},
+  // colorGroup1B: {type: "3fv", value: [0.04, 0.04, 0.04], color: true},
 
   // // blue, grey
   // backgroundColor: {type: "3fv", value: [0.92, 0.92, 0.92], color: true},
@@ -70,7 +79,7 @@ const uniforms = {
   dotSize: {type: "f", value: 0.5},
   lineWeight: {type: "f", value: 0.02},
 
-  colorFadeCenter: {type: "f", value: 0.6, min: 0.0, max: 1.0, step: 0.001},
+  colorFadeCenter: {type: "f", value: 0.2, min: 0.0, max: 1.0, step: 0.001},
   colorFadeWidth: {type: "f", value: 0.4, min: 0.0, max: 1.0, step: 0.001},
 
   windings: {type: "f", value: 9.2},
