@@ -23,7 +23,7 @@ let controls; // eslint-disable-line no-unused-vars
 const clock = new THREE.Clock();
 
 // *LOOPING*
-const loopPeriod = 4; // in seconds
+const loopPeriod = 10; // in seconds
 let loopValue = 0; // position inside the loop [0..1)
 
 let gui;

@@ -237,8 +237,8 @@ void main()	{
   float prevNoise;
 
   float remappedTime = time;
-  float noiseFadePos = 0.7 + snoise(vec4(position * 9.0, 1.0)) * 0.3;
-  remappedTime = smoothstep(noiseFadePos - 0.03, noiseFadePos + 0.03, remappedTime);
+  float noiseFadePos = 0.5 + snoise(vec4(position * 9.0, 1.0)) * 0.5;
+  remappedTime = smoothstep(noiseFadePos - 0.02, noiseFadePos + 0.02, remappedTime);
   remappedTime = clamp(remappedTime, 0.0, 1.0);
 
   #if defined( INNER)
