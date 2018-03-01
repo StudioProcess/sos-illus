@@ -49,7 +49,7 @@ const float PI = 3.14159265359;
 //               Distributed under the MIT License. See LICENSE file.
 //               https://github.com/ashima/webgl-noise
 //               https://github.com/stegu/webgl-noise
-// 
+//
 
 vec3 mod289(vec3 x) {
   return x - floor(x * (1.0 / 289.0)) * 289.0;
@@ -170,7 +170,7 @@ float cubicPulse( float c, float w, float x ) {
 }
 
 vec4 quat_from_axis_angle(vec3 axis, float angle)
-{ 
+{
   vec4 qr;
   float half_angle = (angle * 0.5) * 3.14159 / 180.0;
   qr.x = axis.x * sin(half_angle);
@@ -181,12 +181,12 @@ vec4 quat_from_axis_angle(vec3 axis, float angle)
 }
 
 vec4 quat_conj(vec4 q)
-{ 
-  return vec4(-q.x, -q.y, -q.z, q.w); 
+{
+  return vec4(-q.x, -q.y, -q.z, q.w);
 }
-  
+
 vec4 quat_mult(vec4 q1, vec4 q2)
-{ 
+{
   vec4 qr;
   qr.x = (q1.w * q2.x) + (q1.x * q2.w) + (q1.y * q2.z) - (q1.z * q2.y);
   qr.y = (q1.w * q2.y) - (q1.x * q2.z) + (q1.y * q2.w) + (q1.z * q2.x);
@@ -196,14 +196,14 @@ vec4 quat_mult(vec4 q1, vec4 q2)
 }
 
 vec3 rotate_vertex_position(vec3 position, vec3 axis, float angle)
-{ 
+{
   vec4 qr = quat_from_axis_angle(axis, angle);
   vec4 qr_conj = quat_conj(qr);
   vec4 q_pos = vec4(position.x, position.y, position.z, 0);
-  
+
   vec4 q_tmp = quat_mult(qr, q_pos);
   qr = quat_mult(q_tmp, qr_conj);
-  
+
   return vec3(qr.x, qr.y, qr.z);
 }
 
@@ -232,7 +232,7 @@ void main()	{
   vec3 noisedPoint0 = noisePos(point0[INDEX], 1.0);
   vec3 noisedPoint1 = noisePos(point1[INDEX], 3.0);
   vec3 noisedPoint2 = noisePos(point2[INDEX], 7.0);
-  
+
   vec3 startPos = Spline(
     noisedPoint0,
     noisedPoint1,
@@ -291,7 +291,7 @@ void main()	{
 
   color.rgb *= mix(
     1.0,
-    colorFadeCenter + colorFadeWidth * cos(angle),
+    colorFadeCenter, // + colorFadeWidth * cos(angle),
     position.z
   );
 
