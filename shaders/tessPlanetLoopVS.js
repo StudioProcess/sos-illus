@@ -24,6 +24,11 @@ uniform float rotationSpeed;
 uniform float minDistance;
 uniform float maxDistance;
 
+uniform float loopFadeTimeCenter;
+uniform float loopFadeTimeWidth;
+uniform float loopFadeDuration;
+uniform float loopFadeNoiseScale;
+
 attribute vec3 position;
 
 varying float vHeightVal;
@@ -237,8 +242,8 @@ void main()	{
   float prevNoise;
 
   float remappedTime = time;
-  float noiseFadePos = 0.5 + snoise(vec4(position * 9.0, 1.0)) * 0.5;
-  remappedTime = smoothstep(noiseFadePos - 0.02, noiseFadePos + 0.02, remappedTime);
+  float noiseFadePos = loopFadeTimeCenter + snoise(vec4(position * loopFadeNoiseScale, 1.0)) * loopFadeTimeWidth;
+  remappedTime = smoothstep(noiseFadePos - loopFadeDuration, noiseFadePos + loopFadeDuration, remappedTime);
   remappedTime = clamp(remappedTime, 0.0, 1.0);
 
   #if defined( INNER)

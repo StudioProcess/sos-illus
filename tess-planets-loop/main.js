@@ -119,6 +119,11 @@ const uniforms = {
   saturationValue: {type: "f", value: 0.25}, // 0.5
   brightnessValue: {type: "f", value: 0.03}, // 0.3
 
+  loopFadeTimeCenter: {type: "f", value: 0.5, min: 0.0, max: 1.0, step: 0.001},
+  loopFadeTimeWidth: {type: "f", value: 0.5, min: 0.0, max: 0.5, step: 0.001},
+  loopFadeDuration: {type: "f", value: 0.02, min: 0.0, max: 0.1, step: 0.001},
+
+  loopFadeNoiseScale: {type: "f", value: 9.0, step: 0.05},
 
 
   // Glowing Pink; like request
