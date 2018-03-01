@@ -14,6 +14,9 @@ const H = 800;
 let RENDERING = false;
 let TILES = 2;
 
+let numberOfStrains = 1; // 1 or 2
+let fadeStrains = false;
+
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
 let frameRequestId;
@@ -38,11 +41,11 @@ const uniforms = {
   colorGroup1B: {type: "3fv", value: [0.04, 0.0, 0.32], color: true},
 
   point0Center: {type: "3fv", value: [-3.0, -18.0, 0.0]},
-  point0Range: {type: "f", value: 4.0},
+  point0Range: {type: "f", value: 0.0},
   point1Center: {type: "3fv", value: [2.0, 3.0, 1.0]},
-  point1Range: {type: "f", value: 4.0},
+  point1Range: {type: "f", value: 0.0},
   point2Center: {type: "3fv", value: [1.0, 80.0, 3.0]},
-  point2Range: {type: "f", value: 4.0},
+  point2Range: {type: "f", value: 0.0},
 
   phase: {type: "fv1", value: [0.0, 0.5], hideinGui: true},
 
@@ -80,7 +83,10 @@ const uniforms = {
   linesFadePos: {type: "fv1", value: [0.5, 0.5]}
 };
 
-const phaseCounters = [0.0,uniforms.phaseLength.value * 0.5];
+let phaseCounters = 0;
+if( fadeStrains ) {
+  phaseCounters = [0.0,uniforms.phaseLength.value * 0.5];
+}
 
 main();
 function main() {
@@ -134,7 +140,7 @@ function setup() {
   const geometry = getInstancedDotGeometry(40, 0.2, numSteps);
   const linesGeometry = getInstancedLineGeometry(1.0, numSteps);
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < numberOfStrains; i++) {
     const centerDots = new THREE.Mesh(
       geometry,
       new THREE.RawShaderMaterial({
@@ -233,7 +239,7 @@ function getFadeTimings(phase, fade, timings) {
 function loop(time) { // eslint-disable-line no-unused-vars
   loopValue = (time/1000 % loopPeriod) / loopPeriod; // *LOOPING*
   // console.log(loopValue);
-  
+
   // const delta = Math.min(1.0 / 20.0, clock.getDelta());
   const delta = 1.0 / 30.0;
 
