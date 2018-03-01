@@ -210,9 +210,21 @@ vec3 rotate_vertex_position(vec3 position, vec3 axis, float angle)
 }
 
 vec3 noisePos(vec3 position, float index) {
-  position.x += noiseOffset * snoise(vec2(position.y * noiseScale, index + time * noiseSpeed));
-  position.y += noiseOffset * snoise(vec2(index - position.x * noiseScale, time * noiseSpeed));
-  position.z += noiseOffset * snoise(vec2(index + position.z * noiseScale, index + time * noiseSpeed));
+  vec2 loopingPos;
+
+  float noisePhaseTime = time * PI * noiseSpeed;
+
+  loopingPos.x = sin(noisePhaseTime) * noiseScale;
+  loopingPos.y = cos(noisePhaseTime) * noiseScale;
+
+  position.x += noiseOffset * snoise(loopingPos.yx);
+
+  loopingPos.x += index;
+  position.y -= noiseOffset * snoise(loopingPos);
+
+  loopingPos.x += index;
+  loopingPos.y -= index;
+  position.y += noiseOffset * snoise(loopingPos);
 
   return position;
 }
@@ -244,7 +256,12 @@ void main()	{
   );
 
   forwardV = normalize(transformed.xyz - forwardV);
-  vec3 offsetV = normalize(cross(forwardV, normalize(cross(forwardV, vec3(1.0, 0.0, 0.0)))));
+  vec3 offsetV = normalize(
+    cross(
+      forwardV,
+      normalize(cross(forwardV, vec3(1.0, 0.0, 0.0)))
+      )
+    );
   vec3 offsetU = normalize(cross(forwardV, offsetV));
 
   float angle = rotationSpeed * time + normId * windings;

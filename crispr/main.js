@@ -74,11 +74,11 @@ const uniforms = {
   colorFadeWidth: {type: "f", value: 0.4, min: 0.0, max: 1.0, step: 0.001},
 
   windings: {type: "f", value: 3.0},
-  rotationSpeed: {type: "f", value: Math.PI * 2.0},
+  rotationSpeed: {type: "f", value: Math.PI * 2.0, hideinGui: true},
 
-  noiseOffset: {type: "f", value: 3.0},
-  noiseScale: {type: "f", value: 0.05},
-  noiseSpeed: {type: "f", value: 0.0},
+  noiseOffset: {type: "f", value: 0.4},
+  noiseScale: {type: "f", value: 0.15},
+  noiseSpeed: {type: "f", value: 2.0, step: 2.0},
 
   pointsInnerTiming: {type: "4fv", value: [0.0, 0.2, 0.65, 0.8], min: 0.0, max: 1.0, step: 0.001},
   pointsOuterTiming: {type: "4fv", value: [0.15, 0.35, 0.7, 0.95], min: 0.0, max: 1.0, step: 0.001},
