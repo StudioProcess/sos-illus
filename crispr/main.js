@@ -27,18 +27,28 @@ const clock = new THREE.Clock();
 const loopPeriod = 5; // in seconds
 let loopValue = 0; // position inside the loop [0..1)
 
-const numSteps = 40;
+const numSteps = 60;
 
 const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
 
-  backgroundColor: {type: "3fv", value: [0.92, 0.92, 0.92], color: true},
+  // taupe color
+  backgroundColor: {type: "3fv", value: [1.0, 0.99, 0.95], color: true},
 
-  colorGroup0A: {type: "3fv", value: [0.11, 0.0, 0.47], color: true},
-  colorGroup0B: {type: "3fv", value: [0.04, 0.01, 0.4], color: true},
+  colorGroup0A: {type: "3fv", value: [0.8, 0.8, 0.8], color: true},
+  colorGroup0B: {type: "3fv", value: [0.04, 0.04, 0.04], color: true},
 
-  colorGroup1A: {type: "3fv", value: [0.16, 0.06, 0.33], color: true},
-  colorGroup1B: {type: "3fv", value: [0.04, 0.0, 0.32], color: true},
+  colorGroup1A: {type: "3fv", value: [0.2, 0.2, 0.2], color: true},
+  colorGroup1B: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
+
+  // // blue, grey
+  // backgroundColor: {type: "3fv", value: [0.92, 0.92, 0.92], color: true},
+  //
+  // colorGroup0A: {type: "3fv", value: [0.11, 0.0, 0.47], color: true},
+  // colorGroup0B: {type: "3fv", value: [0.04, 0.01, 0.4], color: true},
+  //
+  // colorGroup1A: {type: "3fv", value: [0.16, 0.06, 0.33], color: true},
+  // colorGroup1B: {type: "3fv", value: [0.04, 0.0, 0.32], color: true},
 
   point0Center: {type: "3fv", value: [-3.0, -18.0, 0.0]},
   point0Range: {type: "f", value: 0.0},
@@ -68,7 +78,7 @@ const uniforms = {
 
   noiseOffset: {type: "f", value: 3.0},
   noiseScale: {type: "f", value: 0.05},
-  noiseSpeed: {type: "f", value: 0.01},
+  noiseSpeed: {type: "f", value: 0.001},
 
   pointsInnerTiming: {type: "4fv", value: [0.0, 0.2, 0.65, 0.8], min: 0.0, max: 1.0, step: 0.001},
   pointsOuterTiming: {type: "4fv", value: [0.15, 0.35, 0.7, 0.95], min: 0.0, max: 1.0, step: 0.001},
