@@ -24,10 +24,10 @@ let frameRequestId;
 const clock = new THREE.Clock();
 
 // *LOOPING*
-const loopPeriod = 5; // in seconds
+const loopPeriod = 10; // in seconds
 let loopValue = 0; // position inside the loop [0..1)
 
-const numSteps = 60;
+const numSteps = 90;
 
 const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
@@ -35,11 +35,11 @@ const uniforms = {
   // taupe color
   backgroundColor: {type: "3fv", value: [1.0, 0.99, 0.95], color: true},
 
-  colorGroup0A: {type: "3fv", value: [0.8, 0.8, 0.8], color: true},
-  colorGroup0B: {type: "3fv", value: [0.04, 0.04, 0.04], color: true},
+  colorGroup0A: {type: "3fv", value: [0.2, 0.2, 0.2], color: true},
+  colorGroup0B: {type: "3fv", value: [0.9, 0.9, 0.9], color: true},
 
-  colorGroup1A: {type: "3fv", value: [0.2, 0.2, 0.2], color: true},
-  colorGroup1B: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
+  colorGroup1A: {type: "3fv", value: [0.8, 0.8, 0.8], color: true},
+  colorGroup1B: {type: "3fv", value: [0.04, 0.04, 0.04], color: true},
 
   // // blue, grey
   // backgroundColor: {type: "3fv", value: [0.92, 0.92, 0.92], color: true},
@@ -73,11 +73,11 @@ const uniforms = {
   colorFadeCenter: {type: "f", value: 0.6, min: 0.0, max: 1.0, step: 0.001},
   colorFadeWidth: {type: "f", value: 0.4, min: 0.0, max: 1.0, step: 0.001},
 
-  windings: {type: "f", value: 3.0},
+  windings: {type: "f", value: 9.2},
   rotationSpeed: {type: "f", value: Math.PI * 2.0, hideinGui: true},
 
   noiseOffset: {type: "f", value: 0.4},
-  noiseScale: {type: "f", value: 0.15},
+  noiseScale: {type: "f", value: 0.1},
   noiseSpeed: {type: "f", value: 2.0, step: 2.0},
 
   pointsInnerTiming: {type: "4fv", value: [0.0, 0.2, 0.65, 0.8], min: 0.0, max: 1.0, step: 0.001},
