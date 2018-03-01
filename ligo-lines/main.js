@@ -37,8 +37,15 @@ const uniforms = {
   aspectRatio: {type: "f", value: W / H, hideinGui: true},
   computeResolution: {type: "2fv", value: [1.0 / renderResolutionX, 1.0 / renderResolutionY], hideinGui: true},
 
+  // GOLDEN; LOW CONTRAST
+  backgroundColor: {type: "3fv", value: [0.8, 0.74, 0.64], color: true},
+  lineColor: {type: "3fv", value: [0.64, 0.58, 0.51], color: true},
+
+  /**
+  // RED-WHITE
   backgroundColor: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
   lineColor: {type: "3fv", value: [1.0, 0.24, 0.24], color: true},
+  */
 
   extends: {type: "2fv", value: [40.0, 40.0], min: 0.0, max: 100.0, step: 1.0001},
 
@@ -53,9 +60,9 @@ const uniforms = {
   engeryReduce: {type: "f", value: 0.9999, min: 0.1, max: 2.0, step: 0.0001},
 
   displaceGain: {type: "f", value: 0.13, min: 0.0, max: 2.0, step: 0.0001},
-  displaceHeight: {type: "f", value: 1.1, min: -2.0, max: 2.0, step: 0.0001},
+  displaceHeight: {type: "f", value: 0.2, min: -2.0, max: 2.0, step: 0.0001},
 
-  lineWeight: {type: "f", value: 0.004, min: 0.0, max: 0.1, step: 0.0001},
+  lineWeight: {type: "f", value: 0.0171, min: 0.0, max: 0.1, step: 0.0001},
 
   pointSize: {type: "f", value: 0.01},
 

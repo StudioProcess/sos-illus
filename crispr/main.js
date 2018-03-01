@@ -14,6 +14,9 @@ const H = 800;
 let RENDERING = false;
 let TILES = 2;
 
+let numberOfStrains = 1; // 1 or 2
+let fadeStrains = false;
+
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
 let frameRequestId;
@@ -24,25 +27,35 @@ const clock = new THREE.Clock();
 const loopPeriod = 5; // in seconds
 let loopValue = 0; // position inside the loop [0..1)
 
-const numSteps = 40;
+const numSteps = 60;
 
 const uniforms = {
   time: {type: "f", value: 0.0, hideinGui: true},
 
-  backgroundColor: {type: "3fv", value: [0.92, 0.92, 0.92], color: true},
+  // taupe color
+  backgroundColor: {type: "3fv", value: [1.0, 0.99, 0.95], color: true},
 
-  colorGroup0A: {type: "3fv", value: [0.11, 0.0, 0.47], color: true},
-  colorGroup0B: {type: "3fv", value: [0.04, 0.01, 0.4], color: true},
+  colorGroup0A: {type: "3fv", value: [0.8, 0.8, 0.8], color: true},
+  colorGroup0B: {type: "3fv", value: [0.04, 0.04, 0.04], color: true},
 
-  colorGroup1A: {type: "3fv", value: [0.16, 0.06, 0.33], color: true},
-  colorGroup1B: {type: "3fv", value: [0.04, 0.0, 0.32], color: true},
+  colorGroup1A: {type: "3fv", value: [0.2, 0.2, 0.2], color: true},
+  colorGroup1B: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
+
+  // // blue, grey
+  // backgroundColor: {type: "3fv", value: [0.92, 0.92, 0.92], color: true},
+  //
+  // colorGroup0A: {type: "3fv", value: [0.11, 0.0, 0.47], color: true},
+  // colorGroup0B: {type: "3fv", value: [0.04, 0.01, 0.4], color: true},
+  //
+  // colorGroup1A: {type: "3fv", value: [0.16, 0.06, 0.33], color: true},
+  // colorGroup1B: {type: "3fv", value: [0.04, 0.0, 0.32], color: true},
 
   point0Center: {type: "3fv", value: [-3.0, -18.0, 0.0]},
-  point0Range: {type: "f", value: 4.0},
+  point0Range: {type: "f", value: 0.0},
   point1Center: {type: "3fv", value: [2.0, 3.0, 1.0]},
-  point1Range: {type: "f", value: 4.0},
+  point1Range: {type: "f", value: 0.0},
   point2Center: {type: "3fv", value: [1.0, 80.0, 3.0]},
-  point2Range: {type: "f", value: 4.0},
+  point2Range: {type: "f", value: 0.0},
 
   phase: {type: "fv1", value: [0.0, 0.5], hideinGui: true},
 
@@ -61,11 +74,11 @@ const uniforms = {
   colorFadeWidth: {type: "f", value: 0.4, min: 0.0, max: 1.0, step: 0.001},
 
   windings: {type: "f", value: 3.0},
-  rotationSpeed: {type: "f", value: 0.2},
+  rotationSpeed: {type: "f", value: Math.PI * 2.0},
 
   noiseOffset: {type: "f", value: 3.0},
   noiseScale: {type: "f", value: 0.05},
-  noiseSpeed: {type: "f", value: 0.01},
+  noiseSpeed: {type: "f", value: 0.001},
 
   pointsInnerTiming: {type: "4fv", value: [0.0, 0.2, 0.65, 0.8], min: 0.0, max: 1.0, step: 0.001},
   pointsOuterTiming: {type: "4fv", value: [0.15, 0.35, 0.7, 0.95], min: 0.0, max: 1.0, step: 0.001},
@@ -80,7 +93,10 @@ const uniforms = {
   linesFadePos: {type: "fv1", value: [0.5, 0.5]}
 };
 
-const phaseCounters = [0.0,uniforms.phaseLength.value * 0.5];
+let phaseCounters = 0;
+if( fadeStrains ) {
+  phaseCounters = [0.0,uniforms.phaseLength.value * 0.5];
+}
 
 main();
 function main() {
@@ -134,7 +150,7 @@ function setup() {
   const geometry = getInstancedDotGeometry(40, 0.2, numSteps);
   const linesGeometry = getInstancedLineGeometry(1.0, numSteps);
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < numberOfStrains; i++) {
     const centerDots = new THREE.Mesh(
       geometry,
       new THREE.RawShaderMaterial({
@@ -233,7 +249,7 @@ function getFadeTimings(phase, fade, timings) {
 function loop(time) { // eslint-disable-line no-unused-vars
   loopValue = (time/1000 % loopPeriod) / loopPeriod; // *LOOPING*
   // console.log(loopValue);
-  
+
   // const delta = Math.min(1.0 / 20.0, clock.getDelta());
   const delta = 1.0 / 30.0;
 
@@ -252,7 +268,7 @@ function loop(time) { // eslint-disable-line no-unused-vars
       uniforms.linesFadePos.value[i] = getFadeTimings(uniforms.phase.value[i], uniforms.linesFade.value, uniforms.linesTiming.value);
     }
 
-    uniforms.time.value += delta;
+    uniforms.time.value = loopValue;
     cancelAnimationFrame(frameRequestId);
     frameRequestId = requestAnimationFrame(loop);
   }
