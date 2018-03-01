@@ -26,7 +26,7 @@ let controls; // eslint-disable-line no-unused-vars
 const clock = new THREE.Clock();
 
 // *LOOPING*
-const loopPeriod = 5; // in seconds
+const loopPeriod = 10; // in seconds
 let loopValue = 0; // position inside the loop [0..1)
 
 const heightPingPong = new PingPongRunner();
@@ -84,7 +84,7 @@ const uniforms = {
 
   walzeRelDuration: {type: "f", value: 0.1, min: 0.0, max: 1.0, step: 0.0001},
 
-  walzeWidth: {type: "f", value: 0.2, min: 0.0, max: 0.5, step: 0.0001},
+  walzeWidth: {type: "f", value: 0.8, min: 0.0, max: 0.5, step: 0.0001},
 
   pointPositions: {
     type: "v3v",
