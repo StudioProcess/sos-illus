@@ -74,7 +74,7 @@ const uniforms = {
   colorFadeWidth: {type: "f", value: 0.4, min: 0.0, max: 1.0, step: 0.001},
 
   windings: {type: "f", value: 3.0},
-  rotationSpeed: {type: "f", value: 0.2},
+  rotationSpeed: {type: "f", value: Math.PI * 2.0},
 
   noiseOffset: {type: "f", value: 3.0},
   noiseScale: {type: "f", value: 0.05},
@@ -268,7 +268,7 @@ function loop(time) { // eslint-disable-line no-unused-vars
       uniforms.linesFadePos.value[i] = getFadeTimings(uniforms.phase.value[i], uniforms.linesFade.value, uniforms.linesTiming.value);
     }
 
-    uniforms.time.value += delta;
+    uniforms.time.value = loopValue;
     cancelAnimationFrame(frameRequestId);
     frameRequestId = requestAnimationFrame(loop);
   }
