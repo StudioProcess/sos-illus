@@ -78,7 +78,7 @@ const uniforms = {
 
   noiseOffset: {type: "f", value: 3.0},
   noiseScale: {type: "f", value: 0.05},
-  noiseSpeed: {type: "f", value: 0.001},
+  noiseSpeed: {type: "f", value: 0.0},
 
   pointsInnerTiming: {type: "4fv", value: [0.0, 0.2, 0.65, 0.8], min: 0.0, max: 1.0, step: 0.001},
   pointsOuterTiming: {type: "4fv", value: [0.15, 0.35, 0.7, 0.95], min: 0.0, max: 1.0, step: 0.001},
