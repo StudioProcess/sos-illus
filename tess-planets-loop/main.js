@@ -302,7 +302,7 @@ function setup() {
   background.frustumCulled = false;
   scene.add(background);
 
-  const geometry = new THREE.IcosahedronBufferGeometry(1.0, 7);
+  const geometry = new THREE.IcosahedronBufferGeometry(1.0, 7); // change to 8 if more precise geometry needed
   const outerMaterial = new THREE.RawShaderMaterial({
     vertexShader,
     fragmentShader,
