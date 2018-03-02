@@ -44,15 +44,21 @@ const uniforms = {
   aspectRatio: {type: "f", value: W / H, hideinGui: true},
   computeResolution: {type: "2fv", value: [1.0 / renderResolutionX, 1.0 / renderResolutionY], hideinGui: true},
 
-  // GOLDEN; LOW CONTRAST
-  backgroundColor: {type: "3fv", value: [0.8, 0.74, 0.64], color: true},
-  lineColor: {type: "3fv", value: [0.64, 0.58, 0.51], color: true},
+  // violet variation 1
+  // backgroundColor: {type: "3fv", value: [0.1, 0.08, 0.16], color: true},
+  // lineColor: {type: "3fv", value: [0.31, 0.28, 0.45], color: true},
 
-  /**
+  // dark violet
+  backgroundColor: {type: "3fv", value: [0.06, 0.11, 0.25], color: true},
+  lineColor: {type: "3fv", value: [0.24, 0.29, 0.46], color: true},
+
+  // GOLDEN; LOW CONTRAST
+  // backgroundColor: {type: "3fv", value: [0.8, 0.74, 0.64], color: true},
+  // lineColor: {type: "3fv", value: [0.64, 0.58, 0.51], color: true},
+
   // RED-WHITE
-  backgroundColor: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
-  lineColor: {type: "3fv", value: [1.0, 0.24, 0.24], color: true},
-  */
+  // backgroundColor: {type: "3fv", value: [1.0, 1.0, 1.0], color: true},
+  // lineColor: {type: "3fv", value: [1.0, 0.24, 0.24], color: true},
 
   extends: {type: "2fv", value: [40.0, 40.0], min: 0.0, max: 100.0, step: 1.0001},
 
